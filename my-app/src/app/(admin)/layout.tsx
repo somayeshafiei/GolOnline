@@ -3,9 +3,12 @@ export default function adminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (<>
-  <div>
-    <header>header adminLayout</header>
-    {children}
-    </div></>);
+  return (
+    <>
+      <div>
+        <header>header adminLayout</header>
+        {children}
+      </div>
+    </>
+  );
 }
