@@ -1,3 +1,12 @@
-export default function loginLayout() {
-  return <h1>loginLayout</h1>;
+export default function loginLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <header>headerLoginLayout</header>
+      {children}
+    </div>
+  );
 }
