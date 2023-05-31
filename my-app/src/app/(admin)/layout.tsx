@@ -1,3 +1,11 @@
-export default function adminLayout() {
-  return <h1>adminLayout</h1>;
+export default function adminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (<>
+  <div>
+    <header>header adminLayout</header>
+    {children}
+    </div></>);
 }
