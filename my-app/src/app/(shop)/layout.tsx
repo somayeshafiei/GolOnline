@@ -1,5 +1,14 @@
-export default function shopLayout() {
+export default function shopLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-   <h1>shopLayout</h1>
-  )
+    <>
+      <div>
+        <header>header shop Layout</header>
+        {children}
+      </div>
+    </>
+  );
 }
