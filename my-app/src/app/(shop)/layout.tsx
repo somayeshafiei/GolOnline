@@ -1,5 +1,3 @@
 export default function shopLayout() {
-  return (
-   <h1>shopLayout</h1>
-  )
+  return <h1>shopLayout</h1>;
 }
