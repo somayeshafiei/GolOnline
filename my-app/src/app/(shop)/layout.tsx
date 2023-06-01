@@ -6,7 +6,7 @@ export default function shopLayout({
   return (
     <>
       <div>
-        <header>header shop Layout</header>
+        <header className="h-14 p-10 bg-green-300 text-center">فروشگاه</header>
         {children}
       </div>
     </>
