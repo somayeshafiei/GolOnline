@@ -4,12 +4,10 @@ export default function shopLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <div className="flex flex-col">
-        <header className="h-14 p-10 bg-green-300 text-center">فروشگاه</header>
-        {children}
-        <footer className="bg-green-500 h-20">فوتر</footer>
-      </div>
-    </>
+    <div className="flex flex-col h-full">
+      <header className="h-14 p-10 bg-green-300 text-center">فروشگاه</header>
+      <main className="flex-1 h-full">{children}</main>
+      <footer className="bg-green-500 h-20">فوتر</footer>
+    </div>
   );
 }
