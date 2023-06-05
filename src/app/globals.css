@@ -2,17 +2,12 @@
 @tailwind components;
 @font-face {
   font-family: 'IranSans';
-  src: local('IranSans'), url(../assets/fonts/IRANSansWeb.ttf) format('ttf');
-  src: local('IranSans'),
-    url(../assets/fonts/IRANSansWeb_Black.ttf) format('ttf');
-  src: local('IranSans'),
-    url(../assets/fonts/IRANSansWeb_Bold.ttf) format('ttf');
-  src: local('IranSans'),
-    url(../assets/fonts/IRANSansWeb_Light.ttf) format('ttf');
-  src: local('IranSans'),
-    url(../assets/fonts/IRANSansWeb_Medium.ttf) format('ttf');
-  src: local('IranSans'),
-    url(../assets/fonts/IRANSansWeb_UltraLight.ttf) format('ttf');
+  src: local('IranSans'), url(../fonts/IRANSansWeb.ttf) format('ttf');
+  src: local('IranSans'), url(../fonts/IRANSansWeb_Black.ttf) format('ttf');
+  src: local('IranSans'), url(../fonts/IRANSansWeb_Bold.ttf) format('ttf');
+  src: local('IranSans'), url(../fonts/IRANSansWeb_Light.ttf) format('ttf');
+  src: local('IranSans'), url(../fonts/IRANSansWeb_Medium.ttf) format('ttf');
+  src: local('IranSans'), url(../fonts/IRANSansWeb_UltraLight.ttf) format('ttf');
 }
 @tailwind utilities;
 
