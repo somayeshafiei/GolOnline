@@ -1,15 +1,32 @@
 'use client';
 import React, { useState } from 'react';
 import { Drawer, Menu } from 'antd';
+import { MenuOutlined } from '@ant-design/icons';
 
 const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   return (
-    <header className="h-16 ">
-      <div>
-        {/* <MenuOutlined /> */}
+    <header className="h-16 flex w-full border-b sm:justify-center">
+      <div
+        style={{
+          backgroundColor: 'red',
+          height: '60px',
+          paddingRight: 12,
+          paddingTop: 12,
+        }}
+        className="sm:hidden"
+      >
+        <MenuOutlined
+          dir="rtl"
+          style={{ fontSize: 30 }}
+          onClick={() => {
+            setOpenMenu(true);
+          }}
+        />
       </div>
-      <AppMenue />
+      <span className="hidden sm:block">
+        <AppMenue />
+      </span>
       <Drawer
         open={openMenu}
         onClose={() => {
