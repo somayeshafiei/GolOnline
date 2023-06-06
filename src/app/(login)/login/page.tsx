@@ -1,3 +1,9 @@
+import FormMaker from '@/components/pages/login/Form';
+
 export default function LoginPage() {
-  return <h1>LoginPage</h1>;
+  return (
+    <>
+      <FormMaker />
+    </>
+  );
 }
