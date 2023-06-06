@@ -14,9 +14,13 @@ import React from 'react';
 const SideBar = () => {
   const router = useRouter();
   return (
-    <div className="h-full">
-      <Title>داشبورد</Title>
+    <div className="h-full flex flex-col">
+      <h2 className="border-l mb-0 text-center p-6 py-10 font-bold text-3xl">
+        داشبورد
+      </h2>
       <Menu
+        className="flex-1"
+        // style={{ height: '100%' }}
         onClick={({ key }) => {
           if (key === '/Logout') {
             router.push('/');
@@ -24,6 +28,7 @@ const SideBar = () => {
             router.push(key);
           }
         }}
+        defaultSelectedKeys={[window.location.pathname]}
         items={[
           { label: 'خانه', key: '/dashboard', icon: <HomeOutlined /> },
           {
