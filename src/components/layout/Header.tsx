@@ -5,9 +5,13 @@ import { MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import Image from 'next/image';
 import logo from '../../images/Logo.png';
 import Link from 'next/link';
+import Cookies from 'universal-cookie';
 
 const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
+  const cookies = new Cookies();
+  const test = cookies.get('accessToken');
+
   return (
     <header className="h-16 flex w-full border-b justify-between px-5 sm:px-10 md:px-[120px]">
       <span className="hidden sm:flex sm:flex-col sm:justify-center sm:items-center  sm:justify-items-end">
@@ -40,11 +44,17 @@ const Header = () => {
         <Link href={'/cart'}>
           <ShoppingCartOutlined style={{ fontSize: 20 }} />
         </Link>
-        <Link href={'/login'}>
+        {test ? (
           <Button className="text-white bg-[#46A358] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358]">
-            ورود
+            خروج
           </Button>
-        </Link>
+        ) : (
+          <Link href={'/login'}>
+            <Button className="text-white bg-[#46A358] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358]">
+              ورود
+            </Button>
+          </Link>
+        )}
       </div>
     </header>
   );
