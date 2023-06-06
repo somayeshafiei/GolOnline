@@ -4,6 +4,7 @@ import {
   HomeOutlined,
   MonitorOutlined,
   ShopOutlined,
+  PoweroffOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 import Title from 'antd/es/typography/Title';
@@ -30,6 +31,12 @@ const SideBar = () => {
             label: 'قیمت و موجودی',
             key: '/dashboard/Inventory_price',
             icon: <MonitorOutlined />,
+          },
+          {
+            label: 'خروج',
+            key: '/Logout',
+            icon: <PoweroffOutlined />,
+            danger: true,
           },
         ]}
       ></Menu>
