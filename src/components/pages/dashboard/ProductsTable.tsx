@@ -1,10 +1,3 @@
-// import React from 'react';
-
-// const Table = () => {
-//   return <div>Table</div>;
-// };
-
-// export default Table;
 'use client';
 interface Props {
   products: Prduct[];
@@ -36,7 +29,7 @@ import instance from '@/api/constants';
 import { Button, Table } from 'antd';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-export default function Test({ products }: Props) {
+export default function ProductsTable({ products }: Props) {
   // const [categories, setCategories] = useState();
   const [columns, setColumns] = useState([
     {

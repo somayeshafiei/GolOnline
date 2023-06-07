@@ -1,4 +1,4 @@
-import Test from '@/components/pages/dashboard/Table';
+import ProductsTable from '@/components/pages/dashboard/ProductsTable';
 
 export async function getData() {
   const res = await fetch(
@@ -19,7 +19,7 @@ export default async function dashboardProductsPage() {
 
   return (
     <>
-      <Test products={result} />
+      <ProductsTable products={result} />
     </>
   );
 }
