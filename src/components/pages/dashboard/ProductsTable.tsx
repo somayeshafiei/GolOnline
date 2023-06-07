@@ -83,12 +83,7 @@ export default function ProductsTable({ products }: Props) {
   // }, [products, categories]);
   return (
     <>
-      <Table
-        columns={columns}
-        dataSource={dataSource}
-        bordered
-        scroll={{ y: 500 }}
-      />
+      <Table columns={columns} dataSource={dataSource} scroll={{ y: 500 }} />
     </>
   );
 }
