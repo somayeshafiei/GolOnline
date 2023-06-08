@@ -13,19 +13,22 @@ export async function getData() {
   return res.json();
 }
 
-export default async function dashboardProductsPage() {
+const dashboardProductsPage = async () => {
   const res = await getData();
   const result = [...res.data.products];
 
   return (
-    <div className="flex flex-col gap-5 px-4 md:px-10 pt-24">
-      <div className="flex w-full justify-between">
-        <h2 className="font-bold text-lg">مدیریت کالاها</h2>
-        <button className="bg-green-500 p-2 px-4 text-white font-semibold text-md rounded-md">
-          افزودن کالا
-        </button>
+    <>
+      <div className="flex flex-col gap-5 px-4 md:px-10 pt-24">
+        <div className="flex w-full justify-between">
+          <h2 className="font-bold text-lg">مدیریت کالاها</h2>
+          <button className="bg-green-500 p-2 px-4 text-white font-semibold text-md rounded-md">
+            افزودن کالا
+          </button>
+        </div>
+        <ProductsTable products={result} />
       </div>
-      <ProductsTable products={result} />
-    </div>
+    </>
   );
-}
+};
+export default dashboardProductsPage;
