@@ -15,7 +15,9 @@ const Header = () => {
   return (
     <header className="h-16 flex w-full border-b justify-between px-5 sm:px-10 md:px-[120px]">
       <span className="hidden sm:flex sm:flex-col sm:justify-center sm:items-center sm:justify-items-end">
-        <Image src={logo} alt="logo" height={60} width={120} />
+        <Link href={'/'}>
+          <Image src={logo} alt="logo" height={60} width={120} />
+        </Link>
       </span>
       <div className="order-first flex flex-col justify-center text-[#46A358] h-full sm:hidden">
         <MenuOutlined
