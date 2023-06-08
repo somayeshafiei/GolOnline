@@ -27,32 +27,19 @@ interface Prduct {
 }
 import { Button, Table } from 'antd';
 import { useState } from 'react';
-export default function ProductsTable({ products }: Props) {
-  // const [categories, setCategories] = useState();
+export default function InventoryTable({ products }: Props) {
   const [columns, setColumns] = useState([
     {
-      title: 'تصویر',
-      dataIndex: 'images[0]',
-      // render:()=><img src={`https://localhost:8000/products/images/products/images/${dataIndex}`}
-    },
-    {
-      title: 'نام محصول',
+      title: 'کالا',
       dataIndex: 'name',
     },
     {
-      title: 'دسته بندی',
-      dataIndex: 'category',
-      // render:(value:string)=>fetch()
+      title: 'قیمت',
+      dataIndex: 'price',
     },
     {
-      title: 'عملیات',
-      dataIndex: 'actions',
-      render: () => (
-        <div className="flex items-center justify-center w-full h-full gap-3">
-          <Button type="primary">ویرایش</Button>
-          <Button>حذف</Button>
-        </div>
-      ),
+      title: 'موجودی',
+      dataIndex: 'quantity',
     },
   ]);
   const [dataSource, setDataSource] = useState(
