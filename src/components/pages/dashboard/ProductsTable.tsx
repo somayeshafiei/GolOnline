@@ -25,10 +25,8 @@ interface Prduct {
 
   __v: number;
 }
-import instance from '@/api/constants';
 import { Button, Table } from 'antd';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 export default function ProductsTable({ products }: Props) {
   // const [categories, setCategories] = useState();
   const [columns, setColumns] = useState([
