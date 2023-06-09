@@ -10,13 +10,13 @@ const FormMaker = () => {
   const router = useRouter();
   const [form] = Form.useForm();
   return (
-    <div className="w-full h-full flex justify-center items-center">
+    <div className="w-full h-full flex justify-center items-center flex-col gap-5">
       <Link href={'/'}>
         <Button
           block
           type="primary"
           htmlType="button"
-          style={{ backgroundColor: 'red' }}
+          style={{ backgroundColor: 'grey' }}
         >
           بازگشت به صفحه اصلی
         </Button>
@@ -93,7 +93,7 @@ const FormMaker = () => {
             block
             type="primary"
             htmlType="submit"
-            style={{ backgroundColor: 'blue' }}
+            style={{ backgroundColor: 'green' }}
           >
             ورود به پنل ادمین
           </Button>
