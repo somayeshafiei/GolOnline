@@ -36,6 +36,7 @@ export default function ProductsTable({ products }: Props) {
       key: 'images',
       render: (record: any) => (
         <Image
+          loading="lazy"
           height={100}
           width={100}
           alt="pic"
@@ -56,6 +57,9 @@ export default function ProductsTable({ products }: Props) {
           {record.category.name} / {record.subcategory.name}
         </span>
       ),
+      sorter: (record1: any, record2: any) => {
+        return record1.category.name.localeCompare(record2.category.name);
+      },
     },
     {
       title: 'عملیات',
