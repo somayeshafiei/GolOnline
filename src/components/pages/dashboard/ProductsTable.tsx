@@ -34,7 +34,7 @@ export default function ProductsTable({ products }: Props) {
       title: 'تصویر',
       dataIndex: '',
       key: 'images',
-      render: (record) => (
+      render: (record: any) => (
         <Image
           height={100}
           width={100}
@@ -51,7 +51,7 @@ export default function ProductsTable({ products }: Props) {
       title: 'دسته بندی',
       dataIndex: '',
       key: 'category-subcategory',
-      render: (record) => (
+      render: (record: any) => (
         <span>
           {record.category.name} / {record.subcategory.name}
         </span>

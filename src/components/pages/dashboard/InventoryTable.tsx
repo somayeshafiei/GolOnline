@@ -47,7 +47,17 @@ export default function InventoryTable({ products }: Props) {
   );
   return (
     <>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{
+          pageSize: 3,
+          total: products.length,
+          showSizeChanger: true,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`,
+        }}
+      />
     </>
   );
 }
