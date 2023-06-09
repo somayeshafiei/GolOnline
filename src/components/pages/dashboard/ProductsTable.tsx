@@ -66,7 +66,7 @@ export default function ProductsTable({ products }: Props) {
       dataIndex: 'actions',
       render: () => (
         <div className="flex items-center justify-center w-full h-full gap-3">
-          <Button type="primary">ویرایش</Button>
+          <Button>ویرایش</Button>
           <Button>حذف</Button>
         </div>
       ),
