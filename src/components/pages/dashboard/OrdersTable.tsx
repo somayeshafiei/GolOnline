@@ -63,7 +63,7 @@ export default function OrdersTable({ orders }: Props) {
         { text: 'تحویل داده شده', value: true },
         { text: 'در انتظار ارسال', value: false },
       ],
-      onFilter: (value: boolean, record: Order) => {
+      onFilter: (value: any, record: Order) => {
         return record.deliveryStatus === value;
       },
     },
