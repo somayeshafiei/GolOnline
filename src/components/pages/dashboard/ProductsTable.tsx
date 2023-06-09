@@ -26,13 +26,22 @@ interface Prduct {
   __v: number;
 }
 import { Button, Table } from 'antd';
+import Image from 'next/image';
 import { useState } from 'react';
 export default function ProductsTable({ products }: Props) {
   const [columns, setColumns] = useState([
     {
       title: 'تصویر',
-      dataIndex: 'images[0]',
-      // render:()=><img src={`https://localhost:8000/products/images/products/images/${dataIndex}`}
+      dataIndex: '',
+      key: 'images',
+      render: (record) => (
+        <Image
+          height={100}
+          width={100}
+          alt="pic"
+          src={`https://localhost:8000/products/images/products/images/${record.images[0]}`}
+        />
+      ),
     },
     {
       title: 'نام محصول',
@@ -40,7 +49,13 @@ export default function ProductsTable({ products }: Props) {
     },
     {
       title: 'دسته بندی',
-      dataIndex: 'category.name',
+      dataIndex: '',
+      key: 'category-subcategory',
+      render: (record) => (
+        <span>
+          {record.category.name} / {record.subcategory.name}
+        </span>
+      ),
     },
     {
       title: 'عملیات',
@@ -59,7 +74,17 @@ export default function ProductsTable({ products }: Props) {
 
   return (
     <>
-      <Table columns={columns} dataSource={dataSource} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{
+          pageSize: 4,
+          total: products.length,
+          showSizeChanger: true,
+          showTotal: (total, range) =>
+            `${range[0]}-${range[1]} of ${total} items`,
+        }}
+      />
     </>
   );
 }
