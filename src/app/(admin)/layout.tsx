@@ -1,3 +1,5 @@
+import SideBar from '@/components/layout/SideBar';
+
 export default function adminLayout({
   children,
 }: {
@@ -5,8 +7,8 @@ export default function adminLayout({
 }) {
   return (
     <>
-      <div>
-        <header>header adminLayout</header>
+      <div className="flex flex-row h-full w-full">
+        <SideBar />
         {children}
       </div>
     </>
