@@ -78,11 +78,12 @@ export default function ProductsTable({ products }: Props) {
         columns={columns}
         dataSource={dataSource}
         pagination={{
-          pageSize: 4,
+          pageSize: 3,
           total: products.length,
           showSizeChanger: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} of ${total} items`,
+            
         }}
       />
     </>
