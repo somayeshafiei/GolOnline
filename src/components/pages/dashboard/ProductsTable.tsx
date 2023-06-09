@@ -39,7 +39,7 @@ export default function ProductsTable({ products }: Props) {
           height={100}
           width={100}
           alt="pic"
-          src={`https://localhost:8000/products/images/products/images/${record.images[0]}`}
+          src={`http://localhost:8000/images/products/images/${record.images[0]}`}
         />
       ),
     },
@@ -83,7 +83,6 @@ export default function ProductsTable({ products }: Props) {
           showSizeChanger: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} of ${total} items`,
-            
         }}
       />
     </>
