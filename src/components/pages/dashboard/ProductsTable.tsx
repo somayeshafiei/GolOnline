@@ -28,7 +28,6 @@ interface Prduct {
 import { Button, Table } from 'antd';
 import { useState } from 'react';
 export default function ProductsTable({ products }: Props) {
-  // const [categories, setCategories] = useState();
   const [columns, setColumns] = useState([
     {
       title: 'تصویر',
@@ -41,8 +40,7 @@ export default function ProductsTable({ products }: Props) {
     },
     {
       title: 'دسته بندی',
-      dataIndex: 'category',
-      // render:(value:string)=>fetch()
+      dataIndex: 'category.name',
     },
     {
       title: 'عملیات',
@@ -58,30 +56,10 @@ export default function ProductsTable({ products }: Props) {
   const [dataSource, setDataSource] = useState(
     products && Array.isArray(products) ? products : []
   );
-  // useEffect(() => {
-  //   axios
-  //     .get('http://localhost:8000/api/categories')
-  //     .then(function (response) {
-  //       // handle success
-  //       console.log(response.data);
-  //       if (response.data.status === 'success') {
-  //         setCategories(response?.data?.categories);
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       // handle error
-  //       console.log(error);
-  //     });
-  // });
-  // useEffect(() => {
-  //   console.log(categories);
-  //   products.forEach((pro) => {
-  //      categories?.find((ctg) => ctg.id === pro.id);
-  //   });
-  // }, [products, categories]);
+
   return (
     <>
-      <Table columns={columns} dataSource={dataSource} scroll={{ y: 500 }} />
+      <Table columns={columns} dataSource={dataSource} />
     </>
   );
 }

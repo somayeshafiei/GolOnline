@@ -47,7 +47,7 @@ export default function InventoryTable({ products }: Props) {
   );
   return (
     <>
-      <Table columns={columns} dataSource={dataSource} scroll={{ y: 500 }} />
+      <Table columns={columns} dataSource={dataSource} />
     </>
   );
 }
