@@ -93,8 +93,4 @@ export default function ProductsTable({ products }: Props) {
   );
 }
 
-// const formatDate = (dateString: string) => {
-//   const date = new Date(dateString);
-//   const formattedDate = date.toLocaleDateString('fa-IR');
-//   return formattedDate;
-//   };
+
