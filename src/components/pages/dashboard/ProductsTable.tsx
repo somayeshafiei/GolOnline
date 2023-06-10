@@ -92,3 +92,5 @@ export default function ProductsTable({ products }: Props) {
     </>
   );
 }
+
+

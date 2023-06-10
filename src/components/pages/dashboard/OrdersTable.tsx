@@ -30,6 +30,7 @@ interface Order {
   updatedAt: string;
 }
 
+import formatDate from '@/utils/formatDate';
 import { Button, Table } from 'antd';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -47,7 +48,12 @@ export default function OrdersTable({ orders }: Props) {
     },
     {
       title: ' زمان ثبت سفارش',
-      dataIndex: 'createdAt',
+      dataIndex: '',
+      key: 'createdAt',
+      render: (record: Order) => {
+        const dateValue = formatDate(record.createdAt);
+        return <span>{dateValue}</span>;
+      },
     },
     {
       title: 'وضعیت تحویل',
