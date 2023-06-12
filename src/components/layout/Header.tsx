@@ -1,7 +1,12 @@
 'use client';
 import React, { useState } from 'react';
 import { Button, Drawer, Menu } from 'antd';
-import { MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import {
+  MenuOutlined,
+  ShoppingCartOutlined,
+  LoginOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons';
 import Image from 'next/image';
 import logo from '../../images/Logo.png';
 import Link from 'next/link';
@@ -28,7 +33,7 @@ const Header = () => {
           }}
         />
       </div>
-      <span className="hidden sm:block">
+      <span className="hidden sm:block sm:w-[18rem]">
         <AppMenue />
       </span>
       <Drawer
@@ -48,12 +53,12 @@ const Header = () => {
         </Link>
         {test ? (
           <Button className="text-white bg-[#46a358] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358]">
-            خروج
+            خروج <LogoutOutlined />
           </Button>
         ) : (
           <Link href={'/login'}>
-            <Button className="text-white bg-[#46A358] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358]">
-              ورود
+            <Button className="text-white bg-[#46A358] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358] ">
+              ورود <LoginOutlined />
             </Button>
           </Link>
         )}
