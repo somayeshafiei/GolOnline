@@ -47,7 +47,7 @@ const Header = () => {
           <ShoppingCartOutlined style={{ fontSize: 20 }} />
         </Link>
         {test ? (
-          <Button className="text-white bg-[#46A358] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358]">
+          <Button className="text-white bg-[#46a358] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358]">
             خروج
           </Button>
         ) : (

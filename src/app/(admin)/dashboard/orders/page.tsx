@@ -2,7 +2,7 @@ import instance from '@/api/constants';
 import OrdersTable from '@/components/pages/dashboard/OrdersTable';
 
 export async function getData() {
-  const res = await instance.get('http://localhost:8000/api/orders');
+  const res = await instance.get(`http://localhost:8000/api/orders`);
   if (res.status !== 200) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data');

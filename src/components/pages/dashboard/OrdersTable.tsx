@@ -33,8 +33,24 @@ interface Order {
 import formatDate from '@/utils/formatDate';
 import { Button, Table } from 'antd';
 import Image from 'next/image';
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useState } from 'react';
 export default function OrdersTable({ orders }: Props) {
+  // const router = useRouter();
+  // const pathname = usePathname();
+  // const searchParams = useSearchParams();
+  // const createQueryString = (name: any, value: any) => {
+  //   let url = new URL('http://localhost:8000/api/orders?');
+  //   // let params = new URLSearchParams(url.search);
+  //   // Add a third parameter.
+  //   // params.set("baz", 3);
+  //   // params.toString(); // "foo=1&bar=2&baz=3"
+  //   let params = new URLSearchParams(url.search);
+  //   params.set(name, value);
+
+  //   return params.toString();
+  // };
+
   const [columns, setColumns] = useState([
     {
       title: 'نام کاربر',
