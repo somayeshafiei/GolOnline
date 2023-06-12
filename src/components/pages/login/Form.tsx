@@ -42,14 +42,19 @@ const FormMaker = () => {
             .then((res) => {
               console.log(res);
               if (res.data.status === 'success') {
-                const accessToken = res.data.token.accessToken;
-                const refreshToken = res.data.token.refreshToken;
-                const cookies = new Cookies();
-                cookies.set('accessToken', accessToken, { path: '/' });
-                cookies.set('refreshToken', refreshToken, {
-                  path: '/',
-                });
-                router.push('/dashboard');
+                if (res.data.data.user.role === 'ADMIN') {
+                  const accessToken = res.data.token.accessToken;
+                  const refreshToken = res.data.token.refreshToken;
+                  const cookies = new Cookies();
+                  cookies.set('accessToken', accessToken, { path: '/' });
+                  cookies.set('refreshToken', refreshToken, {
+                    path: '/',
+                  });
+                  router.push('/dashboard');
+                } else if (res.data.data.user.role !== 'ADMIN') {
+                  alert('اجازه ورود به پنل را ندارید');
+                  return <p>اجازه ورود به پنل ادمین را ندارید.</p>;
+                }
               }
             });
         }}
@@ -82,7 +87,7 @@ const FormMaker = () => {
               message: 'لطفا رمز عبور خود را وارد کنید',
             },
             { whitespace: true, message: 'رمز نمی تواند خالی باشد' },
-            { min: 3 },
+            { min: 3, message: 'رمز نمی تواند کمتر از ۳ کاراکتر باشد' },
           ]}
           hasFeedback
         >
