@@ -1,20 +1,40 @@
 'use client';
-import DeleteProduct from '@/actions';
-import Product from '@/interfaces';
-import { Button, Table, Modal } from 'antd';
+interface Props {
+  products: Prduct[];
+}
+interface Prduct {
+  id: string;
+  category: string;
+  subcategory: string;
+  name: string;
+  price: number;
+  brand: string;
+  description: string;
+  thumbnail: string;
+  images: string[];
+  rating: {
+    rate: number;
+    count: number;
+  };
+
+  createdAt: string;
+
+  updatedAt: string;
+
+  slugname: string;
+
+  __v: number;
+}
+import { Button, Table } from 'antd';
 import Image from 'next/image';
 import { useState } from 'react';
-import Cookies from 'universal-cookie';
-interface Props {
-  products: Product[];
-}
 export default function ProductsTable({ products }: Props) {
   const [columns, setColumns] = useState([
     {
       title: 'تصویر',
       dataIndex: '',
       key: 'images',
-      render: (record: Product) => (
+      render: (record: any) => (
         <Image
           loading="lazy"
           height={100}
@@ -32,51 +52,35 @@ export default function ProductsTable({ products }: Props) {
       title: 'دسته بندی',
       dataIndex: '',
       key: 'category-subcategory',
-      render: (record: Product) => (
+      render: (record: any) => (
         <span>
           {record.category.name} / {record.subcategory.name}
         </span>
       ),
-      sorter: (record1: Product, record2: Product) => {
+      sorter: (record1: any, record2: any) => {
         return record1.category.name.localeCompare(record2.category.name);
       },
     },
     {
       title: 'عملیات',
-      dataIndex: '',
-      key: '_id',
-      render: (record: Product) => (
+      dataIndex: 'actions',
+      render: () => (
         <div className="flex items-center justify-center w-full h-full gap-3">
           <Button>ویرایش</Button>
-          <form
-            action={() => {
-              const cookies = new Cookies();
-              const accessToken = cookies.get('accessToken');
-              onDeleteProduct(record._id, accessToken);
-            }}
-          >
-            <Button htmlType="submit">حذف</Button>
-          </form>
+          <Button>حذف</Button>
         </div>
       ),
     },
   ]);
-  // delete product from database with opening madal and confirm it
-  function onDeleteProduct(record: string, accessToken: string) {
-    Modal.confirm({
-      title: 'از حذف این محصول اطمینان دارید؟',
-      okText: 'بله',
-      okType: 'danger',
-      cancelText: 'خیر',
-      onOk: () => DeleteProduct(record, accessToken),
-    });
-  }
+  const [dataSource, setDataSource] = useState(
+    products && Array.isArray(products) ? products : []
+  );
 
   return (
     <>
       <Table
         columns={columns}
-        dataSource={products}
+        dataSource={dataSource}
         pagination={{
           pageSize: 3,
           total: products.length,
@@ -88,3 +92,5 @@ export default function ProductsTable({ products }: Props) {
     </>
   );
 }
+
+

@@ -1,9 +1,7 @@
 import ProductsTable from '@/components/pages/dashboard/ProductsTable';
 
 export async function getData() {
-  const res = await fetch('http://localhost:8000/api/products', {
-    next: { tags: ['products'] },
-  });
+  const res = await fetch('http://localhost:8000/api/products');
   // ?page=1&limit=4&fields=-rating,-createdAt,-updatedAt,-__v&sort=price&quantity[gte]=8
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
@@ -16,7 +14,7 @@ export async function getData() {
 const dashboardProductsPage = async () => {
   const res = await getData();
   const result = [...res.data.products];
-  // console.log(result);
+  console.log(result);
   return (
     <>
       <div className="flex flex-col gap-5 px-4 md:px-10 pt-24">
