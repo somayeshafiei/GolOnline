@@ -34,4 +34,7 @@ async function DeleteProduct(record: string, accessToken: string) {
   //   },
   // });
 }
+export async function AddProduct(){
+  console.log('serveraction')
+}
 export default DeleteProduct;
