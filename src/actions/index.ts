@@ -13,28 +13,26 @@ async function DeleteProduct(record: string, accessToken: string) {
     });
     const result = await res.json();
     console.log(result);
+    revalidateTag('products');
   } catch (error) {
     console.log(error);
   }
-
-  revalidateTag('products');
-  // instance.delete(`http://localhost:8000/api/products/${record?._id}`);
-  // Modal.confirm({
-  //   title: 'از حذف این محصول اطمینان دارید؟',
-  //   okText: 'بله',
-  //   okType: 'danger',
-  //   cancelText: 'خیر',
-  //   onOk: () => {
-  //     const cookies = new Cookies();
-  //     instance.delete(`http://localhost:8000/api/products/${record?._id}`);
-  //     revalidateTag('products');
-  //     return setDataSource((pre) => {
-  //       return pre.filter((pro) => pro._id !== record._id);
-  //     });
-  //   },
-  // });
 }
-export async function AddProduct(){
-  console.log('serveraction')
+export async function AddProduct(formData: any, accessToken: string) {
+  console.log(formData);
+  try {
+    const res = await fetch(`http://localhost:8000/api/products`, {
+      method: 'POST',
+      headers: {
+        Authorization: 'Bearer ' + accessToken,
+      },
+      body: formData,
+    });
+    const result = await res.json();
+    console.log(result);
+    revalidateTag('products');
+  } catch (error) {
+    console.log(error);
+  }
 }
 export default DeleteProduct;

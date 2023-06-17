@@ -15,7 +15,9 @@ export async function getData() {
   return res.json();
 }
 export async function getCategories() {
-  const res = await fetch('http://localhost:8000/api/categories');
+  const res = await fetch('http://localhost:8000/api/categories', {
+    next: { tags: ['products'] },
+  });
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data');
@@ -34,7 +36,7 @@ const dashboardProductsPage = async () => {
       <div className="flex flex-col gap-5 px-4 md:px-10 pt-24">
         <div className="flex w-full justify-between">
           <h2 className="font-bold text-lg">مدیریت کالاها</h2>
-          <AddProductForm  categories={categoriesResult}/>
+          <AddProductForm categories={categoriesResult} />
           {/* <form action={AddProduct}>
             <button
               type="submit"

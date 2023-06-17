@@ -1,31 +1,46 @@
 // import { AddProduct } from "@/actions";
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 // import AddProductModal from './AddProductModal';
-import { Button, Form, Input, Modal, Select, Upload, UploadFile } from 'antd';
+import {
+  Button,
+  Form,
+  Input,
+  Modal,
+  Select,
+  Upload,
+  UploadFile,
+  message,
+} from 'antd';
 import { AddProduct } from '@/actions';
 import { Subcategory, Category } from '@/interfaces';
 
 import axios from 'axios';
 import { UploadOutlined } from '@ant-design/icons';
+import Cookies from 'universal-cookie';
 interface Props {
   categories: Category[];
 }
 export default function AddProductForm({ categories }: Props) {
   const [category, setCategory] = useState('');
+  const [categoryId, setCategoryId] = useState('');
   const [subcategory, setSubcategory] = useState([]);
+  const [subcategoryId, setSubcategoryId] = useState('');
   const [modal1Open, setModal1Open] = useState(false);
   const [form] = Form.useForm();
+  const thumbNailInputRef = useRef(null);
+  const imagesInputRef = useRef(null);
   const test = categories.map((ca) => {
     return { value: ca.name, label: ca.name };
   });
   console.log(test);
-  const handleChange = (value: string) => {
-    console.log(value); // { value: "lucy", key: "lucy", label: "Lucy (101)" }
-    // setSubcategory([]);
+  const handleChangeCategory = (value: string) => {
+    console.log(value);
     setCategory(value);
+    const ctg = categories?.find((c) => c.name == category);
+    console.log(ctg?._id);
     const ts = categories.find((c) => c.name == value);
-    console.log(ts);
+    ctg && setCategoryId(ctg._id);
     axios
       .get(`http://localhost:8000/api/subcategories?category[_id]=${ts?._id}`)
       .then((res) => {
@@ -33,13 +48,17 @@ export default function AddProductForm({ categories }: Props) {
         setSubcategory(res.data.data.subcategories);
       });
   };
+  function handleChangeSubCategory(value: string) {
+    console.log(value);
+    const valueSubCategory = value;
+    axios
+      .get(`http://localhost:8000/api/subcategories?name=${valueSubCategory}`)
+      .then((res) => {
+        console.log(res.data.data.subcategories[0]._id);
+        setSubcategoryId(res.data.data.subcategories[0]._id);
+      });
+  }
   const fileList: UploadFile[] = [
-    {
-      uid: '0',
-      name: 'xxx.png',
-      status: 'uploading',
-      percent: 33,
-    },
     {
       uid: '-1',
       name: 'yyy.png',
@@ -49,6 +68,7 @@ export default function AddProductForm({ categories }: Props) {
         'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
     },
   ];
+
   return (
     <>
       <form action={() => setModal1Open(true)}>
@@ -74,46 +94,39 @@ export default function AddProductForm({ categories }: Props) {
         <Form
           // action={}
           form={form}
-          labelCol={{ span: 4 }}
+          labelCol={{ span: 6 }}
           style={{ paddingTop: '30px' }}
           // wrapperCol={{ span: 14 }}
           autoComplete="off"
-          onFinish={(values) => console.log(values)}
-          // onFinish={(values) => {
-          //   const data = new FormData();
-          //   data.append('username', values.username);
-          //   data.append('password', values.password);
-          //   const finalData = Object.fromEntries(data);
-          //   console.log(values);
-          //   console.log(finalData);
-          //   instance
-          //     .post('auth/login', JSON.stringify(finalData), {
-          //       headers: {
-          //         'Content-Type': 'application/json',
-          //       },
-          //     })
-          //     .then((res) => {
-          //       console.log(res);
-          //       if (res.data.status === 'success') {
-          //         if (res.data.data.user.role === 'ADMIN') {
-          //           const accessToken = res.data.token.accessToken;
-          //           const refreshToken = res.data.token.refreshToken;
-          //           const cookies = new Cookies();
-          //           cookies.set('accessToken', accessToken, { path: '/' });
-          //           cookies.set('refreshToken', refreshToken, {
-          //             path: '/',
-          //           });
-          //           router.push('/dashboard');
-          //         } else if (res.data.data.user.role !== 'ADMIN') {
-          //           alert('اجازه ورود به پنل را ندارید');
-          //           return <p>اجازه ورود به پنل ادمین را ندارید.</p>;
-          //         }
-          //       }
-          //     });
-          // }}
+          // onFinish={(values) => console.log(values)}
+          onFinish={(values) => {
+            const data = new FormData();
+            const thumbNail = thumbNailInputRef.current?.files[0];
+
+            console.log(`Selected file: ${thumbNail}`);
+            const imagesFile = imagesInputRef.current?.files[0];
+
+            const ctg = categories?.find((c) => c.name == category);
+            console.log(ctg?._id);
+            const categoryId = ctg?._id;
+            data.append('name', values.name);
+            data.append('brand', values.brand);
+            data.append('price', values.price);
+            data.append('description', values.description);
+            data.append('category', categoryId);
+            data.append('subcategory', subcategoryId);
+            data.append('thumbnail', thumbNail);
+            data.append('images', imagesFile);
+            const finalData = Object.fromEntries(data);
+            console.log(values);
+            console.log(finalData);
+            const cookies = new Cookies();
+            const accessToken = cookies.get('accessToken');
+            AddProduct(data, accessToken);
+          }}
         >
           <Form.Item
-            name="username"
+            name="name"
             label="نام کالا"
             rules={[
               {
@@ -179,7 +192,7 @@ export default function AddProductForm({ categories }: Props) {
                   .localeCompare((optionB?.label ?? '').toLowerCase())
               }
               style={{ width: '100%' }}
-              onChange={handleChange}
+              onChange={handleChangeCategory}
               options={test}
             />
           </Form.Item>
@@ -190,20 +203,8 @@ export default function AddProductForm({ categories }: Props) {
           >
             <Select
               // disabled
-              // value={subcategory}
-              // showSearch
               placeholder="جستجوی زیر شاخه کالا..."
-              // optionFilterProp="children"
-              // filterOption={(input, option) =>
-              //   (option?.label ?? '').includes(input)
-              // }
-              // filterSort={(optionA, optionB) =>
-              //   (optionA?.label ?? '')
-              //     .toLowerCase()
-              //     .localeCompare((optionB?.label ?? '').toLowerCase())
-              // }
-              // style={{ width: '100%' }}
-              // onChange={(value) => setSubcategory(value)}
+              onChange={handleChangeSubCategory}
               options={
                 category !== ''
                   ? subcategory.map((item: Subcategory) => {
@@ -214,22 +215,171 @@ export default function AddProductForm({ categories }: Props) {
             />
           </Form.Item>
           <Form.Item
-            label="thumbnail"
-            name="thumbnail"
+            name="quantity"
+            label="تعداد کالا"
             rules={[
               {
                 required: true,
-                message: 'عکس کوچک کالا را آپلود نمایید',
+                message: 'لطفا تعداد کالا را وارد کنید',
               },
+              { whitespace: true, message: 'تعداد کالا نمی تواند خالی باشد' },
             ]}
+            hasFeedback
           >
-            <Upload
-              // action="https://localhost:8000/images/products/thumbnail"
+            <Input
+              type="number"
+              style={{ width: '100%' }}
+              placeholder="تعداد کالا را وارد کنید"
+            />
+          </Form.Item>
+          <Form.Item
+            name="brand"
+            label="برند کالا"
+            rules={[
+              {
+                required: true,
+                message: 'لطفا برند کالا را وارد نمایید',
+              },
+              { whitespace: true, message: 'برند کالا نمی تواند خالی باشد' },
+              // ({getFieldValue})=>({
+              //   validator(_,value){
+              //     if(!value)
+              //   }
+              // })
+            ]}
+            hasFeedback
+          >
+            <Input
+              placeholder="برند کالا را وارد کنید"
+              style={{ width: '100%' }}
+            />
+          </Form.Item>
+          <Form.Item
+            label="thumbnail"
+            name="thumbnail"
+            // valuePropName="fileList"
+            // getValueFromEvent={(event) => {
+            //   return event?.fileList;
+            // }}
+            // rules={[
+            //   {
+            //     required: true,
+            //     message: 'عکس کوچک کالا را آپلود نمایید',
+            //   },
+            //   {
+            //     validator(_, fileList) {
+            //       return new Promise((resolve, reject) => {
+            //         if (fileList && fileList[0].size > 900000) {
+            //           reject('حجم فایل زیاد است');
+            //         } else {
+            //           resolve('اضافه شد');
+            //         }
+            //       });
+            //     },
+            //   },
+            // ]}
+          >
+            <input
+              type="file"
+              name="thumbnail"
+              accept="image/*"
+              ref={thumbNailInputRef}
+              // value={thumbnail}
+              // onChange={handleThumbnail}
+            ></input>
+            {/* <Upload
+              maxCount={1}
+              action="https://localhost:8000/images/products/thumbnail"
               listType="picture"
               // defaultFileList={[...fileList]}
+              beforeUpload={(file) => {
+                return new Promise((resolve, reject) => {
+                  if (file.size > 900000) {
+                    reject('حجم فایل زیاد است');
+                    message.error('حجم فایل زیاد است');
+                  } else {
+                    resolve('اضافه شد');
+                  }
+                });
+              }}
             >
               <Button icon={<UploadOutlined />}>Upload</Button>
-            </Upload>
+            </Upload> */}
+          </Form.Item>
+          <Form.Item
+            label="تصویر"
+            name="images"
+            // valuePropName="fileList"
+            // getValueFromEvent={(event) => {
+            //   return event?.fileList;
+            // }}
+            rules={[
+              {
+                required: true,
+                message: 'عکس  کالا را آپلود نمایید',
+              },
+              // {
+              //   validator(_, fileList) {
+              //     return new Promise((resolve, reject) => {
+              //       if (fileList && fileList[0].size > 900000) {
+              //         reject('حجم فایل زیاد است');
+              //       } else {
+              //         resolve('اضافه شد');
+              //       }
+              //     });
+              //   },
+              // },
+            ]}
+          >
+            <input
+              type="file"
+              name="images"
+              accept="image/png, image/jpeg"
+              ref={imagesInputRef}
+              // value="images"
+              // onChange={handleImages}
+            ></input>
+
+            {/* <Upload
+              maxCount={1}
+              action="https://localhost:8000/images/products/thumbnail"
+              listType="picture"
+              // defaultFileList={[...fileList]}
+              beforeUpload={(file) => {
+                return new Promise((resolve, reject) => {
+                  if (file.size > 900000) {
+                    reject('حجم فایل زیاد است');
+                    message.error('حجم فایل زیاد است');
+                  } else {
+                    resolve('اضافه شد');
+                  }
+                });
+              }}
+            >
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload> */}
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="توضیحات کالا"
+            rules={[
+              {
+                required: true,
+                message: 'لطفا توضیحات کالا را وارد نمایید',
+              },
+              { whitespace: true, message: 'توضیحات کالا نمی تواند خالی باشد' },
+              // ({getFieldValue})=>({
+              //   validator(_,value){
+              //     if(!value)
+              //   }
+              // })
+            ]}
+            hasFeedback
+          >
+            <Input
+              placeholder="توضیحات کالا را وارد کنید"
+              style={{ width: '100%' }}
+            />
           </Form.Item>
           <Form.Item wrapperCol={{ span: 24 }}>
             <Button
