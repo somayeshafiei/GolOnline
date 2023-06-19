@@ -1,14 +1,16 @@
 'use client';
 import DeleteProduct from '@/actions';
-import Product from '@/interfaces';
+import Product, { Category } from '@/interfaces';
 import { Button, Table, Modal } from 'antd';
 import Image from 'next/image';
 import { useState } from 'react';
 import Cookies from 'universal-cookie';
+import EditProductForm from './EditProductForm';
 interface Props {
   products: Product[];
+  categories:Category[]
 }
-export default function ProductsTable({ products }: Props) {
+export default function ProductsTable({ products,categories }: Props) {
   const [columns, setColumns] = useState([
     {
       title: 'تصویر',
@@ -47,7 +49,7 @@ export default function ProductsTable({ products }: Props) {
       key: '_id',
       render: (record: Product) => (
         <div className="flex items-center justify-center w-full h-full gap-3">
-          <Button>ویرایش</Button>
+          <EditProductForm record={record} categories={categories}/>
           <form
             action={() => {
               const cookies = new Cookies();
