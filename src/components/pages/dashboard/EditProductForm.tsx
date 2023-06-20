@@ -14,12 +14,13 @@ export default function EditProductForm({ record, categories }: Props) {
   const [modal1Open, setModal1Open] = useState(false);
   const [initialSubCategories, setInitialSubCategories] = useState([]);
   const [imagesPreview, setImagesPreview] = useState('');
-  const [thumbnailPreview, setThumbnailPreview] = useState(record.thumbnail);
+  const [thumbnailPreview, setThumbnailPreview] = useState('');
   const thumbNailInputRef = useRef(null);
   const imagesInputRef = useRef(null);
   const [category, setCategory] = useState('');
   const [categoryId, setCategoryId] = useState([]);
   const [subcategory, setSubcategory] = useState([]);
+  const [tests, setTests] = useState(false);
   const [form] = Form.useForm();
   const test = categories.map((ca) => {
     return { value: ca.name, label: ca.name };
@@ -33,10 +34,9 @@ export default function EditProductForm({ record, categories }: Props) {
     quantity: record.quantity,
     brand: record.brand,
     description: record.description,
-    thumbnail: record.thumbnail,
-    images: record.images,
+    thumbnail: thumbNailInputRef?.current?.files[0],
+    images: imagesInputRef?.current?.files,
   };
-  const subcategoryRef = useRef([]);
   function handleClickSubCategory() {
     const ctgId = record.category._id;
     axios
@@ -61,47 +61,51 @@ export default function EditProductForm({ record, categories }: Props) {
         setSubcategory(res.data.data.subcategories);
       });
   };
-  // useEffect(() => {
-  // const thumbNailInput = thumbNailInputRef?.current;
-  // // Create a new File object
-  // const myFile = new File(['Hello World!'], `${record.thumbnail}.jpg`, {
-  //   type: 'image/jpeg',
-  //   lastModified: new Date().getTime(),
-  // });
 
-  // // Now let's create a DataTransfer to get a FileList
-  // const dataTransfer = new DataTransfer();
-  // dataTransfer.items.add(myFile);
-
-  // // Set the files property of the input element to the FileList obtained from the DataTransfer
-  // if (thumbNailInput) {
-  //   thumbNailInput.files = dataTransfer.files;
-  // }
-  //   // if (thumbNailInputRef.current) {
-  //   //   thumbNailInputRef.current.defaultValue = `${record.thumbnail}.jpg`;
-  //   // }
-  // }, [record]);
   useEffect(() => {
-    if (initialValues) {
+    if (modal1Open) {
       form.setFieldsValue(initialValues);
       setImagesPreview(record.images);
-      const thumbNailInput = thumbNailInputRef?.current;
-      // Create a new File object
-      const myFile = new File(['Hello World!'], `${record.thumbnail}.jpg`, {
-        type: 'image/jpeg',
-        lastModified: new Date().getTime(),
-      });
-
-      // Now let's create a DataTransfer to get a FileList
-      const dataTransfer = new DataTransfer();
-      dataTransfer.items.add(myFile);
-
-      // Set the files property of the input element to the FileList obtained from the DataTransfer
-      if (thumbNailInput) {
-        thumbNailInput.files = dataTransfer.files;
-      }
+      setThumbnailPreview(record.thumbnail);
     }
-  }, [initialValues, thumbNailInputRef?.current]);
+  }, [modal1Open]);
+  useEffect(() => {
+    // if (initialValues && modal1Open) {
+    //   form.setFieldsValue(initialValues);
+    //   setImagesPreview(record.images);
+    //   setThumbnailPreview(record.thumbnail);
+    // }
+    const thumbNailInput = thumbNailInputRef?.current;
+    const imagesInput = imagesInputRef?.current;
+    // Create a new File object
+    const myFile = new File(['Hello World!'], `${record.thumbnail}`, {
+      type: 'image/jpeg',
+      lastModified: new Date().getTime(),
+    });
+    const imagesFiles = new File(['images!'], `${record.images}`, {
+      type: 'image/jpeg',
+      lastModified: new Date().getTime(),
+    });
+
+    // Now let's create a DataTransfer to get a FileList
+    const dataTransfer = new DataTransfer();
+    dataTransfer.items.add(myFile);
+    const imagesTransfer = new DataTransfer();
+    imagesTransfer.items.add(imagesFiles);
+
+    // Set the files property of the input element to the FileList obtained from the DataTransfer
+    // setTests(true);
+    console.log(dataTransfer);
+    console.log(thumbNailInput);
+    if (thumbNailInput) {
+      console.log('test');
+      thumbNailInput.files = dataTransfer.files;
+    }
+    if (imagesInput) {
+      imagesInput.files = imagesTransfer.files;
+    }
+  }, [initialValues, tests, category]);
+
   return (
     <>
       <form action={() => setModal1Open(true)}>
@@ -110,16 +114,16 @@ export default function EditProductForm({ record, categories }: Props) {
       <Modal
         title="افزودن/ویرایش کالا"
         centered
-        // style={{ top: 20 }}
         open={modal1Open}
         footer={null}
-        // onOk={() => {
-        //   AddProduct();
-        //   setModal1Open(false);
-        // }}
         destroyOnClose
         onCancel={() => setModal1Open(false)}
         afterClose={() => form.resetFields()}
+        afterOpenChange={(open) => {
+          if (open) {
+            setTests(!tests);
+          }
+        }}
       >
         <Form
           preserve={false}
@@ -130,10 +134,10 @@ export default function EditProductForm({ record, categories }: Props) {
           initialValues={initialValues}
           onFinish={(values) => {
             console.log(values);
-            // const thumbNail = thumbNailInputRef?.current?.files[0];
+            const thumbNail = thumbNailInputRef?.current?.files[0];
 
             // const imagesFile = imagesInputRef?.current?.files[0];
-            // console.log(`Selected file: ${thumbNail}`);
+            console.log(`Selected file: ${thumbNail}`);
             // console.log(imagesFile);
           }}
         >
