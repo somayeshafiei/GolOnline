@@ -46,7 +46,7 @@ const dashboardProductsPage = async () => {
             </button>
           </form> */}
         </div>
-        <ProductsTable products={result} />
+        <ProductsTable products={result} categories={categoriesResult}/>
       </div>
     </>
   );
