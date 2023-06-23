@@ -6,6 +6,7 @@ import {
   ShoppingCartOutlined,
   LoginOutlined,
   LogoutOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import Image from 'next/image';
 import logo from '../../images/Logo.png';
@@ -33,7 +34,7 @@ const Header = () => {
           }}
         />
       </div>
-      <span className="hidden sm:block sm:w-[18rem]">
+      <span className="hidden sm:block sm:w-[20rem]">
         <AppMenue />
       </span>
       <Drawer
@@ -48,6 +49,11 @@ const Header = () => {
         <AppMenue isInLine />
       </Drawer>
       <div className="flex items-center justify-center gap-4">
+        {test && (
+          <Link href={'/dashboard/orders'}>
+            <UserOutlined style={{ fontSize: 20 }} />
+          </Link>
+        )}
         <Link href={'/cart'}>
           <ShoppingCartOutlined style={{ fontSize: 20 }} />
         </Link>
