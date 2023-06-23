@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Form } from 'antd';
 import axios from 'axios';
+import { EditProduct } from '@/actions';
+import Cookies from 'universal-cookie';
 interface Props {
   record: Product;
   categories: Category[];
@@ -13,12 +15,17 @@ interface Props {
 export default function EditProductForm({ record, categories }: Props) {
   const [modal1Open, setModal1Open] = useState(false);
   const [initialSubCategories, setInitialSubCategories] = useState([]);
-  const [imagesPreview, setImagesPreview] = useState('');
-  const [thumbnailPreview, setThumbnailPreview] = useState('');
+  const [imagesPreview, setImagesPreview] = useState<string[]>();
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | File>();
+  const [thumbnailNewPreview, setThumbnailNewPreview] = useState<File>();
+
   const thumbNailInputRef = useRef(null);
   const imagesInputRef = useRef(null);
   const [category, setCategory] = useState('');
-  const [categoryId, setCategoryId] = useState([]);
+  const [categoryId, setCategoryId] = useState<string>();
+  const [subcategoryId, setSubcategoryId] = useState<string>();
+  const [initialsubcategoryId, setInitialSubcategoryId] = useState<string>();
+
   const [subcategory, setSubcategory] = useState([]);
   const [tests, setTests] = useState(false);
   const [form] = Form.useForm();
@@ -37,7 +44,20 @@ export default function EditProductForm({ record, categories }: Props) {
     thumbnail: thumbNailInputRef?.current?.files[0],
     images: imagesInputRef?.current?.files,
   };
-  function handleClickSubCategory() {
+  function handleInitialSubCategoryId() {
+    const ctgName = record.category.name;
+    const subCa = record.subcategory.name;
+    axios
+      .get(`http://localhost:8000/api/subcategories?name=${subCa}`)
+      .then((res) => {
+        console.log(res.data.data.subcategories[0]._id);
+        setInitialSubcategoryId(res?.data?.data?.subcategories[0]._id);
+        // return res.data.data.subcategories[0]._id;
+        // setInitialSubCategories(res.data.data.subcategories);
+        // subcategoryRef.current = res.data.data.subcategories;
+      });
+  }
+  function handleInitialSubCategories() {
     const ctgId = record.category._id;
     axios
       .get(`http://localhost:8000/api/subcategories?category[_id]=${ctgId}`)
@@ -47,64 +67,110 @@ export default function EditProductForm({ record, categories }: Props) {
         // subcategoryRef.current = res.data.data.subcategories;
       });
   }
-  const handleChangeCategory = (value: string) => {
-    console.log(value);
-    setCategory(value);
-    const ctg = categories?.find((c) => c.name == category);
+  function handleInitialCategory() {
+    const ctg = categories?.find(
+      (c: Category) => c.name == record.category.name
+    );
     console.log(ctg?._id);
-    const ts = categories.find((c) => c.name == value);
+    return ctg?._id;
+  }
+  const handleChangeCategory = (value: string) => {
+    const ctg = categories?.find((c: Category) => c.name == value);
+    // console.log(value);
+    // console.log(ctg?._id);
+    setCategory(value);
     ctg && setCategoryId(ctg._id);
     axios
-      .get(`http://localhost:8000/api/subcategories?category[_id]=${ts?._id}`)
+      .get(`http://localhost:8000/api/subcategories?category[_id]=${ctg?._id}`)
       .then((res) => {
-        console.log(res.data.data.subcategories);
+        // console.log(res.data.data.subcategories);
         setSubcategory(res.data.data.subcategories);
       });
   };
 
+  function handleChangeSubCategory(value: string) {
+    console.log(value);
+    const valueSubCategory = value;
+    axios
+      .get(`http://localhost:8000/api/subcategories?name=${valueSubCategory}`)
+      .then((res) => {
+        console.log(res.data.data.subcategories[0]._id);
+        setSubcategoryId(res.data.data.subcategories[0]._id);
+      });
+  }
   useEffect(() => {
     if (modal1Open) {
       form.setFieldsValue(initialValues);
       setImagesPreview(record.images);
       setThumbnailPreview(record.thumbnail);
-    }
-  }, [modal1Open]);
-  useEffect(() => {
-    // if (initialValues && modal1Open) {
-    //   form.setFieldsValue(initialValues);
-    //   setImagesPreview(record.images);
-    //   setThumbnailPreview(record.thumbnail);
-    // }
-    const thumbNailInput = thumbNailInputRef?.current;
-    const imagesInput = imagesInputRef?.current;
-    // Create a new File object
-    const myFile = new File(['Hello World!'], `${record.thumbnail}`, {
-      type: 'image/jpeg',
-      lastModified: new Date().getTime(),
-    });
-    const imagesFiles = new File(['images!'], `${record.images}`, {
-      type: 'image/jpeg',
-      lastModified: new Date().getTime(),
-    });
+      handleInitialSubCategories();
+      handleInitialSubCategoryId();
+      const thumbNailInput = thumbNailInputRef?.current;
+      const imagesInput = imagesInputRef?.current;
 
-    // Now let's create a DataTransfer to get a FileList
-    const dataTransfer = new DataTransfer();
-    dataTransfer.items.add(myFile);
-    const imagesTransfer = new DataTransfer();
-    imagesTransfer.items.add(imagesFiles);
+      // Create a new File object
+      const thumbNailFile = new File(['Hello World!'], `${record.thumbnail}`, {
+        type: 'image/jpeg',
+        lastModified: new Date().getTime(),
+      });
+      const imagesFiles = new File(['images!'], `${record.images}`, {
+        type: 'image/jpeg',
+        lastModified: new Date().getTime(),
+      });
+      // Now let's create a DataTransfer to get a FileList
+      const thumbNailTransfer = new DataTransfer();
+      const imagesTransfer = new DataTransfer();
+      thumbNailTransfer.items.add(thumbNailFile);
+      imagesTransfer.items.add(imagesFiles);
+      if (thumbNailInput) {
+        console.log('test');
+        thumbNailInput.files = thumbNailTransfer.files;
+      }
+      if (imagesInput) {
+        imagesInput.files = imagesTransfer.files;
+      }
+    }
+  }, [modal1Open, setInitialSubCategories, imagesPreview]);
+  // useEffect(() => {
+  //   console.log(categoryId);
+  // }, [category]);
 
-    // Set the files property of the input element to the FileList obtained from the DataTransfer
-    // setTests(true);
-    console.log(dataTransfer);
-    console.log(thumbNailInput);
-    if (thumbNailInput) {
-      console.log('test');
-      thumbNailInput.files = dataTransfer.files;
-    }
-    if (imagesInput) {
-      imagesInput.files = imagesTransfer.files;
-    }
-  }, [initialValues, tests, category]);
+  // useEffect(() => {
+  //   // if (initialValues && modal1Open) {
+  //   //   form.setFieldsValue(initialValues);
+  //   //   setImagesPreview(record.images);
+  //   //   setThumbnailPreview(record.thumbnail);
+  //   // }
+  //   const thumbNailInput = thumbNailInputRef?.current;
+  //   const imagesInput = imagesInputRef?.current;
+  //   // Create a new File object
+  //   const myFile = new File(['Hello World!'], `${record.thumbnail}`, {
+  //     type: 'image/jpeg',
+  //     lastModified: new Date().getTime(),
+  //   });
+  //   const imagesFiles = new File(['images!'], `${record.images}`, {
+  //     type: 'image/jpeg',
+  //     lastModified: new Date().getTime(),
+  //   });
+
+  //   // Now let's create a DataTransfer to get a FileList
+  //   const dataTransfer = new DataTransfer();
+  //   dataTransfer.items.add(myFile);
+  //   const imagesTransfer = new DataTransfer();
+  //   imagesTransfer.items.add(imagesFiles);
+
+  //   // Set the files property of the input element to the FileList obtained from the DataTransfer
+  //   // setTests(true);
+  //   console.log(dataTransfer);
+  //   console.log(thumbNailInput);
+  //   if (thumbNailInput && thumbnailPreview) {
+  //     console.log('test');
+  //     thumbNailInput.files = dataTransfer.files;
+  //   }
+  //   if (imagesInput) {
+  //     imagesInput.files = imagesTransfer.files;
+  //   }
+  // }, [initialValues, tests, category]);
 
   return (
     <>
@@ -134,11 +200,44 @@ export default function EditProductForm({ record, categories }: Props) {
           initialValues={initialValues}
           onFinish={(values) => {
             console.log(values);
+            console.log(initialSubCategories);
+            const initialSubCategory = handleInitialSubCategoryId();
+            const initialCategoryId = handleInitialCategory();
+            console.log(initialCategoryId);
             const thumbNail = thumbNailInputRef?.current?.files[0];
+            const imagesFile = imagesInputRef?.current?.files[0];
+            const data = new FormData();
+            data.append('name', values.name);
+            data.append('brand', values.brand);
+            data.append('price', values.price);
+            data.append('description', values.description);
+            if (categoryId) {
+              data.append('category', categoryId);
+            } else {
+              data.append(
+                'category',
+                initialCategoryId ? initialCategoryId : ''
+              );
+            }
+            if (subcategoryId) {
+              data.append('subcategory', subcategoryId);
+            } else if (initialsubcategoryId) {
+              data.append('subcategory', initialsubcategoryId);
+            }
 
-            // const imagesFile = imagesInputRef?.current?.files[0];
+            if (thumbnailNewPreview) {
+              data.append('thumbnail', thumbnailNewPreview);
+            } else {
+              data.append('thumbnail', thumbNail);
+            }
+            data.append('images', imagesFile);
             console.log(`Selected file: ${thumbNail}`);
-            // console.log(imagesFile);
+            console.log(imagesFile);
+            const finalData = Object.fromEntries(data);
+            console.log(finalData);
+            const cookies = new Cookies();
+            const accessToken = cookies.get('accessToken');
+            EditProduct(data, accessToken, record._id);
           }}
         >
           <Form.Item
@@ -215,16 +314,18 @@ export default function EditProductForm({ record, categories }: Props) {
               // ref={subcategoryRef}
               // disabled
               placeholder="جستجوی زیر شاخه کالا..."
-              // onClick={handleClickSubCategory}
+              // onClick={handleInitialSubCategories}
               // value={initialSubCategories && initialSubCategories}
+              onChange={handleChangeSubCategory}
               options={
                 category !== ''
                   ? subcategory.map((item: Subcategory) => {
                       return { label: item.name, value: item.name };
                     })
-                  : undefined
+                  : initialSubCategories?.map((item: Subcategory) => {
+                      return { label: item.name, value: item.name };
+                    })
               }
-              // options={initialSubCategories}
             />
           </Form.Item>
           <Form.Item
@@ -267,15 +368,32 @@ export default function EditProductForm({ record, categories }: Props) {
               name="thumbnail"
               accept="image/*"
               ref={thumbNailInputRef}
+              onChange={(e) => {
+                e?.target?.files
+                  ? (setThumbnailNewPreview(e?.target?.files[0]),
+                    setThumbnailPreview(undefined))
+                  : setThumbnailPreview(record.thumbnail);
+              }}
             ></input>
-            <div className="w-full pt-5 flex gap-5">
-              {thumbnailPreview && (
+            <div className="flex w-full gap-5 pt-5">
+              {thumbnailPreview !== undefined ? (
                 <Image
                   src={`http://localhost:8000/images/products/thumbnails/${thumbnailPreview}`}
+                  // src={URL.createObjectURL(thumbnailPreview)}
                   alt="Thumbnail"
                   width={60}
                   height={60}
                 />
+              ) : (
+                thumbnailNewPreview && (
+                  <Image
+                    // src={`http://localhost:8000/images/products/thumbnails/${thumbnailPreview}`}
+                    src={URL.createObjectURL(thumbnailNewPreview)}
+                    alt="Thumbnail"
+                    width={60}
+                    height={60}
+                  />
+                )
               )}
             </div>
           </Form.Item>
@@ -296,7 +414,7 @@ export default function EditProductForm({ record, categories }: Props) {
               ref={imagesInputRef}
             ></input>
             {
-              <div className="w-full pt-5 flex gap-5">
+              <div className="flex w-full gap-5 pt-5">
                 {(imagesPreview && (
                   <Image
                     src={`http://localhost:8000/images/products/images/${imagesPreview}`}
