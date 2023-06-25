@@ -12,13 +12,16 @@ import Image from 'next/image';
 import logo from '../../images/Logo.png';
 import Link from 'next/link';
 import Cookies from 'universal-cookie';
+import  useCartStore  from '@/store/store';
 
 const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const cookies = new Cookies();
   const test = cookies.get('accessToken');
-  const [count, setCount] = useState(5);
-
+  // const [count, setCount] = useState(5);
+  const [cartItems] = useCartStore((state) => [
+    state.cartItems.length
+  ]);
   return (
     <header className="py-2 flex w-full border-b justify-between px-5 sm:px-10 md:px-[120px]">
       <span className="hidden sm:flex sm:flex-col sm:justify-center sm:items-center sm:justify-items-end">
@@ -56,7 +59,7 @@ const Header = () => {
           </Link>
         )}
         <Link href={'/cart'}>
-          <Badge count={count} size="default" status="processing">
+          <Badge count={cartItems} size="default" status="processing">
             {/* <Avatar shape="square" size="large" /> */}
             <ShoppingCartOutlined style={{ fontSize: 24 }} />
           </Badge>

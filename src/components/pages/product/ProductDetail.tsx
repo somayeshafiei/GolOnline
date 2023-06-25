@@ -1,5 +1,6 @@
 'use client';
 import Product from '@/interfaces';
+import useCartStore from '@/store/store';
 import { Button, Rate } from 'antd';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -7,20 +8,31 @@ interface Props {
   productDetail: Product;
 }
 function ProductDetail({ productDetail }: Props) {
-  const [count, setCount] = useState(0);
+  // const [count, setCount] = useState(0);
 
-  function incrementCount() {
-    if (count < productDetail.quantity) {
-      setCount(count + 1);
-    }
-  }
+  // function incrementCount() {
+  //   if (count < productDetail.quantity) {
+  //     setCount(count + 1);
+  //   }
+  // }
 
-  function decrementCount() {
-    if (count > 0) {
-      setCount(count - 1);
-    }
-  }
-  console.log(productDetail)
+  // function decrementCount() {
+  //   if (count > 0) {
+  //     setCount(count - 1);
+  //   }
+  // }
+  const [cartItems, addToCart, increaseItemCount, decreaseItemCount] =
+    useCartStore((state) => [
+      state.cartItems,
+      state.addToCart,
+      state.increaseItemCount,
+      state.decreaseItemCount,
+    ]);
+  const getProductCount = (productId: string) => {
+    const item = cartItems.find((item) => item.productId === productId);
+    return item ? item.count : 0;
+  };
+  const itemCount = getProductCount(productDetail._id);
   return (
     <div>
       <div className="w-full flex gap-5">
@@ -43,11 +55,23 @@ function ProductDetail({ productDetail }: Props) {
             </div>
           </div>
           <div className="flex py-4 w-[20%]">
-            <Button onClick={decrementCount}>-</Button>
-            <input type="number" className=" px-2 w-12" value={count} />
-            <Button onClick={incrementCount}>+</Button>
+            <Button
+              onClick={() => decreaseItemCount(productDetail._id)}
+              disabled={itemCount === 0}
+            >
+              -
+            </Button>
+            <input type="number" className=" px-2 w-12" value={itemCount} />
+            <Button
+              onClick={() => increaseItemCount(productDetail._id)}
+              disabled={itemCount === productDetail.quantity}
+            >
+              +
+            </Button>
           </div>
-          <Button>افزودن به سبد خرید</Button>
+          <Button onClick={() => addToCart(productDetail._id)}>
+            افزودن به سبد خرید
+          </Button>
         </div>
       </div>
     </div>
