@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Button, Drawer, Menu } from 'antd';
+import { Badge, Button, Drawer, Menu } from 'antd';
 import {
   MenuOutlined,
   ShoppingCartOutlined,
@@ -17,9 +17,10 @@ const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const cookies = new Cookies();
   const test = cookies.get('accessToken');
+  const [count, setCount] = useState(5);
 
   return (
-    <header className="h-16 flex w-full border-b justify-between px-5 sm:px-10 md:px-[120px]">
+    <header className="py-2 flex w-full border-b justify-between px-5 sm:px-10 md:px-[120px]">
       <span className="hidden sm:flex sm:flex-col sm:justify-center sm:items-center sm:justify-items-end">
         <Link href={'/'}>
           <Image src={logo} alt="logo" height={60} width={120} />
@@ -34,7 +35,7 @@ const Header = () => {
           }}
         />
       </div>
-      <span className="hidden sm:block sm:w-[20rem]">
+      <span className="hidden sm:block sm:w-[20rem] h-full pb-2">
         <AppMenue />
       </span>
       <Drawer
@@ -51,14 +52,17 @@ const Header = () => {
       <div className="flex items-center justify-center gap-4">
         {test && (
           <Link href={'/dashboard/orders'}>
-            <UserOutlined style={{ fontSize: 20 }} />
+            <UserOutlined style={{ fontSize: 24 }} />
           </Link>
         )}
         <Link href={'/cart'}>
-          <ShoppingCartOutlined style={{ fontSize: 20 }} />
+          <Badge count={count} size="default" status="processing">
+            {/* <Avatar shape="square" size="large" /> */}
+            <ShoppingCartOutlined style={{ fontSize: 24 }} />
+          </Badge>
         </Link>
         {test ? (
-          <Button className="text-white bg-[#46a358] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358]">
+          <Button className="text-white bg-[#666b67] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358]">
             خروج <LogoutOutlined />
           </Button>
         ) : (

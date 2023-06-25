@@ -14,3 +14,6 @@ body {
 body {
   font-family: 'iranSans';
 }
+.ant-menu-horizontal{
+  border-bottom:none
+}

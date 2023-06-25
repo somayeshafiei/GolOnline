@@ -1,4 +1,4 @@
-'use client';
+'use server';
 import { revalidateTag } from 'next/cache';
 
 async function DeleteProduct(record: string, accessToken: string) {

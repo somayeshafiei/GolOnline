@@ -32,9 +32,8 @@ export default async function Home() {
   const allCategoriesName = categoriesResult?.map((ca: Category) => ca.name);
   // console.log(result);
   return (
-    <div className="w-full px-[120px] pt-8">
-      {/* <h1>صفحه اصلی</h1> */}
-      <CategoryGroup allCategories={allCategoriesName} allProducts={result} />
+    <div className="w-full px-5 sm:px-10 md:px-[120px] py-8">
+      <CategoryGroup categoriesResult={categoriesResult} allProducts={result} />
     </div>
   );
 }
