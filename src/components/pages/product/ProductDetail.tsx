@@ -8,19 +8,6 @@ interface Props {
   productDetail: Product;
 }
 function ProductDetail({ productDetail }: Props) {
-  // const [count, setCount] = useState(0);
-
-  // function incrementCount() {
-  //   if (count < productDetail.quantity) {
-  //     setCount(count + 1);
-  //   }
-  // }
-
-  // function decrementCount() {
-  //   if (count > 0) {
-  //     setCount(count - 1);
-  //   }
-  // }
   const [cartItems, addToCart, increaseItemCount, decreaseItemCount] =
     useCartStore((state) => [
       state.cartItems,
