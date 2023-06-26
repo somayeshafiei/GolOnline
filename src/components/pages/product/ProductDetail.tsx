@@ -56,7 +56,9 @@ function ProductDetail({ productDetail }: Props) {
               +
             </Button>
           </div>
-          <Button onClick={() => addToCart(productDetail._id)}>
+          <Button
+            onClick={() => addToCart(productDetail._id)}
+          >
             افزودن به سبد خرید
           </Button>
         </div>

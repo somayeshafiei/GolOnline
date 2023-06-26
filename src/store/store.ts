@@ -66,8 +66,8 @@ const useCartStore = create<CartState>()(
           }
         }),
     }),
-    { name: 'global', getStorage: () => localStorage }
-  )
+    { name: 'global', getStorage: () => localStorage },
+  ),
 );
 
 export default useCartStore;
