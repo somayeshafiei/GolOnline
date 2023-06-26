@@ -1,11 +1,16 @@
 'use client';
+import Loading from '@/app/loading';
 import Product from '@/interfaces';
 import useCartStore from '@/store/store';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
+import { Button, Popconfirm, Table } from 'antd';
+import Image from 'next/image';
 
 const Cart = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const { cartItems } = useCartStore();
+  const { cartItems, removeFromCart, increaseItemCount, decreaseItemCount } =
+    useCartStore();
+
   useEffect(() => {
     const fetchProducts = async () => {
       const productIds = cartItems.map((item) => item.productId);
@@ -20,24 +25,120 @@ const Cart = () => {
 
     fetchProducts();
   }, [cartItems]);
+
+  const columns = [
+    {
+      title: 'تصویر',
+      dataIndex: 'images',
+      render: (images: string) => (
+        <Image
+          loading="lazy"
+          height={100}
+          width={100}
+          alt="pic"
+          src={`http://localhost:8000/images/products/images/${images}`}
+        />
+      ),
+    },
+    {
+      title: 'نام محصول',
+      dataIndex: 'name',
+    },
+    {
+      title: 'قیمت',
+      dataIndex: 'price',
+      render: (price: number) => `${price}  تومان`,
+    },
+    {
+      title: 'تعداد',
+      dataIndex: 'count',
+      render: (count: number, record) => (
+        <div>
+          <Button
+            onClick={() => increaseItemCount(record.key)}
+            disabled={count === record.quantity}
+          >
+            +
+          </Button>
+          {/* <input type="number" value={count} onChange={(e) => updateItemCount(record.key, parseInt(e.target.value))} /> */}
+          <input type="number" value={count} className="w-8 mr-2"></input>
+          <Button
+            onClick={() => decreaseItemCount(record.key)}
+            danger
+            disabled={count === 1}
+          >
+            -
+          </Button>
+        </div>
+      ),
+    },
+    {
+      title: 'قیمت کل',
+      dataIndex: 'totalPrice',
+      render: (totalPrice: number) => `${totalPrice}  تومان`,
+    },
+    {
+      title: '',
+      dataIndex: 'key',
+      render: (key: string) => (
+        <Popconfirm
+          title="این محصول از سبد خرید حذف شود؟"
+          onConfirm={() => removeFromCart(key)}
+        >
+          <Button type="primary" danger>
+            حذف
+          </Button>
+        </Popconfirm>
+      ),
+    },
+  ];
+
+  const data = cartItems.map((item) => {
+    const product = products.find((p) => p._id === item.productId);
+    return {
+      key: item.productId,
+      name: product?.name,
+      price: product?.price,
+      description: product?.description,
+      count: item.count,
+      totalPrice: item.count * product?.price,
+      images: product?.images[0],
+      quantity: product?.quantity,
+    };
+  });
+
   return (
-    <div className="w-full px-5 sm:px-10 md:px-[120px] py-8">     
-      {cartItems?.map((item) => {
-        const product = products?.find((p) => p._id === item.productId);
-        return (
-          <div key={item.productId}>
-            <h3>{product?.name}</h3>
-            <p>Price: ${product?.price}</p>
-            <p>Description: {product?.description}</p>
-            <p>Count: {item.count}</p>
-            {product?.price && (
-              <p>Total Price: ${item.count * product?.price}</p>
-            )}
-            {/* <p>Total Price: ${item.count * product?.price}</p> */}
-          </div>
-        );
-      })}
-    </div>
+    <>
+      <h1 className="font-bold text-2xl px-5 sm:px-10 md:px-[120px] py-8">
+        سبد خرید شما:
+      </h1>
+      <Suspense fallback={<Loading />}>
+        <div className="w-full px-5 sm:px-10 md:px-[120px] py-8">
+          <Table
+            columns={columns}
+            dataSource={data}
+            footer={() => {
+              const totalPrice = data.reduce(
+                (accumulator, currentValue) =>
+                  accumulator + currentValue.totalPrice,
+                0
+              );
+              return (
+                <div className="flex gap-3 text-center pr-20">
+                  <span className="text-lg font-semibold">جمع نهایی:</span>
+                  <div className="flex gap-3">
+                    <span className="text-lg font-semibold underline">
+                      {totalPrice}
+                    </span>
+                    <span className="text-lg font-semibold">تومان</span>
+                  </div>
+                </div>
+              );
+            }}
+          />
+        </div>
+      </Suspense>
+    </>
   );
 };
 

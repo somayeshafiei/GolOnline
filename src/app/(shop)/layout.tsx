@@ -1,5 +1,7 @@
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
+import { Suspense } from 'react';
+import Loading from '../loading';
 
 export default function shopLayout({
   children,
@@ -9,7 +11,9 @@ export default function shopLayout({
   return (
     <div className="flex flex-col h-full">
       <Header />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1">
+        <Suspense fallback={<Loading />}>{children}</Suspense>
+      </main>
       <Footer />
     </div>
   );
