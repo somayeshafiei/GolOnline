@@ -52,8 +52,18 @@ const FormMaker = () => {
                   });
                   router.push('/dashboard');
                 } else if (res.data.data.user.role !== 'ADMIN') {
-                  alert('اجازه ورود به پنل را ندارید');
-                  return <p>اجازه ورود به پنل ادمین را ندارید.</p>;
+                  console.log(res.data.data);
+                  localStorage.setItem(
+                    'userFirstName',
+                    `${res.data.data.user.firstname}`
+                  );
+                  localStorage.setItem(
+                    'userLastName',
+                    `${res.data.data.user.lastname}`
+                  );
+                  router.push('/');
+                  // alert('اجازه ورود به پنل را ندارید');
+                  // return <p>اجازه ورود به پنل ادمین را ندارید.</p>;
                 }
               }
             });
