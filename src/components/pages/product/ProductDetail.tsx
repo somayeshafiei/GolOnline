@@ -1,7 +1,7 @@
 'use client';
 import Product from '@/interfaces';
 import useCartStore from '@/store/store';
-import { Button, Rate } from 'antd';
+import { Button, Rate, message } from 'antd';
 import Image from 'next/image';
 import { useState } from 'react';
 interface Props {
@@ -57,7 +57,10 @@ function ProductDetail({ productDetail }: Props) {
             </Button>
           </div>
           <Button
-            onClick={() => addToCart(productDetail._id)}
+            onClick={() =>{ 
+              addToCart(productDetail._id);
+              message.success('محصول با موفقیت به سبد خرید اضافه شد')
+            }}
           >
             افزودن به سبد خرید
           </Button>
