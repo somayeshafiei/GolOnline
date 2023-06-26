@@ -57,3 +57,14 @@ export interface Subcategory {
   updatedAt: string;
   slugname: string;
 }
+
+export interface CartRecord {
+  key: string;
+  name: string;
+  price: number;
+  description: string;
+  count: number;
+  totalPrice: number;
+  images: string;
+  quantity: number;
+}

@@ -1,9 +1,9 @@
 'use client';
 import Loading from '@/app/loading';
-import Product from '@/interfaces';
+import Product, { CartRecord } from '@/interfaces';
 import useCartStore from '@/store/store';
 import React, { useEffect, useState, Suspense } from 'react';
-import { Button, Popconfirm, Table } from 'antd';
+import { Button, Popconfirm, Table, message } from 'antd';
 import Image from 'next/image';
 
 const Cart = () => {
@@ -52,7 +52,7 @@ const Cart = () => {
     {
       title: 'تعداد',
       dataIndex: 'count',
-      render: (count: number, record) => (
+      render: (count: number, record: any) => (
         <div>
           <Button
             onClick={() => increaseItemCount(record.key)}
@@ -83,7 +83,16 @@ const Cart = () => {
       render: (key: string) => (
         <Popconfirm
           title="این محصول از سبد خرید حذف شود؟"
-          onConfirm={() => removeFromCart(key)}
+          onConfirm={() => {
+            removeFromCart(key);
+            message.success('محصول با موفقیت از سبد خرید حذف شد');
+          }}
+          okText="بله"
+          cancelText="خیر"
+          okButtonProps={{ style: { backgroundColor: 'red' } }}
+          cancelButtonProps={{
+            style: { backgroundColor: 'green', color: 'white' },
+          }}
         >
           <Button type="primary" danger>
             حذف
@@ -101,7 +110,7 @@ const Cart = () => {
       price: product?.price,
       description: product?.description,
       count: item.count,
-      totalPrice: item.count * product?.price,
+      totalPrice: product?.price && item.count * product?.price,
       images: product?.images[0],
       quantity: product?.quantity,
     };
@@ -115,6 +124,9 @@ const Cart = () => {
       <Suspense fallback={<Loading />}>
         <div className="w-full px-5 sm:px-10 md:px-[120px] py-8">
           <Table
+            locale={{
+              emptyText: 'سبد خرید خالی است',
+            }}
             columns={columns}
             dataSource={data}
             footer={() => {
