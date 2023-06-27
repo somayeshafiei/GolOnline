@@ -12,16 +12,26 @@ import Image from 'next/image';
 import logo from '../../images/Logo.png';
 import Link from 'next/link';
 import Cookies from 'universal-cookie';
-import  useCartStore  from '@/store/store';
+import useCartStore from '@/store/store';
+import instance from '@/api/constants';
 
 const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const cookies = new Cookies();
-  const test = cookies.get('accessToken');
-  // const [count, setCount] = useState(5);
-  const [cartItems] = useCartStore((state) => [
-    state.cartItems.length
-  ]);
+  const accessToken = cookies.get('accessToken');
+  const refreshToken = cookies.get('refreshToken');
+
+  const userFirstname = localStorage.getItem('userFirstName');
+  const [cartItems] = useCartStore((state) => [state.cartItems.length]);
+  const handleLogOut = () => {
+    localStorage.removeItem('userFirstName');
+    localStorage.removeItem('userLastName');
+    instance.get(`http://localhost:8000/api/auth/logout`);
+    if (accessToken) {
+      cookies.remove('accessToken');
+      cookies.remove('refreshToken');
+    }
+  };
   return (
     <header className="py-2 flex w-full border-b justify-between px-5 sm:px-10 md:px-[120px]">
       <span className="hidden sm:flex sm:flex-col sm:justify-center sm:items-center sm:justify-items-end">
@@ -53,7 +63,7 @@ const Header = () => {
         <AppMenue isInLine />
       </Drawer>
       <div className="flex items-center justify-center gap-4">
-        {test && (
+        {accessToken && (
           <Link href={'/dashboard/orders'}>
             <UserOutlined style={{ fontSize: 24 }} />
           </Link>
@@ -64,8 +74,11 @@ const Header = () => {
             <ShoppingCartOutlined style={{ fontSize: 24 }} />
           </Badge>
         </Link>
-        {test ? (
-          <Button className="text-white bg-[#666b67] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358]">
+        {userFirstname ? (
+          <Button
+            className="text-white bg-[#666b67] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358]"
+            onClick={handleLogOut}
+          >
             خروج <LogoutOutlined />
           </Button>
         ) : (

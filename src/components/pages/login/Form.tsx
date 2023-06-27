@@ -43,6 +43,14 @@ const FormMaker = () => {
               console.log(res);
               if (res.data.status === 'success') {
                 if (res.data.data.user.role === 'ADMIN') {
+                  localStorage.setItem(
+                    'userFirstName',
+                    `${res.data.data.user.firstname}`
+                  );
+                  localStorage.setItem(
+                    'userLastName',
+                    `${res.data.data.user.lastname}`
+                  );
                   const accessToken = res.data.token.accessToken;
                   const refreshToken = res.data.token.refreshToken;
                   const cookies = new Cookies();
@@ -52,7 +60,6 @@ const FormMaker = () => {
                   });
                   router.push('/dashboard');
                 } else if (res.data.data.user.role !== 'ADMIN') {
-                  console.log(res.data.data);
                   localStorage.setItem(
                     'userFirstName',
                     `${res.data.data.user.firstname}`
@@ -62,8 +69,6 @@ const FormMaker = () => {
                     `${res.data.data.user.lastname}`
                   );
                   router.push('/');
-                  // alert('اجازه ورود به پنل را ندارید');
-                  // return <p>اجازه ورود به پنل ادمین را ندارید.</p>;
                 }
               }
             });
@@ -110,7 +115,7 @@ const FormMaker = () => {
             htmlType="submit"
             style={{ backgroundColor: 'green' }}
           >
-            ورود به پنل ادمین
+            ورود 
           </Button>
         </Form.Item>
       </Form>
