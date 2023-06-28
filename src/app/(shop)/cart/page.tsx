@@ -5,12 +5,20 @@ import useCartStore from '@/store/store';
 import React, { useEffect, useState, Suspense } from 'react';
 import { Button, Popconfirm, Table, message } from 'antd';
 import Image from 'next/image';
+import Link from 'next/link';
+import Cookies from 'universal-cookie';
+import { useRouter } from 'next/navigation';
 
 const Cart = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const { cartItems, removeFromCart, increaseItemCount, decreaseItemCount } =
     useCartStore();
-
+  const cookies = new Cookies();
+  const userFirstName = cookies.get('userFirstName');
+  const router = useRouter();
+  const handleCheckout = () => {
+    userFirstName ? router.push('/checkout') : router.push('/login');
+  };
   useEffect(() => {
     const fetchProducts = async () => {
       const productIds = cartItems.map((item) => item.productId);
@@ -136,14 +144,19 @@ const Cart = () => {
                 0
               );
               return (
-                <div className="flex gap-3 text-center pr-20">
-                  <span className="text-lg font-semibold">جمع نهایی:</span>
-                  <div className="flex gap-3">
-                    <span className="text-lg font-semibold underline">
-                      {totalPrice}
-                    </span>
-                    <span className="text-lg font-semibold">تومان</span>
+                <div className="w-full flex px-5 justify-between items-center">
+                  <div className="flex gap-3 text-center pr-20">
+                    <span className="text-lg font-semibold">جمع نهایی:</span>
+                    <div className="flex gap-3">
+                      <span className="text-lg font-semibold underline">
+                        {totalPrice}
+                      </span>
+                      <span className="text-lg font-semibold">تومان</span>
+                    </div>
                   </div>
+                  <Button className="bg-green-200" onClick={handleCheckout}>
+                    نهایی کردن سبد خرید
+                  </Button>
                 </div>
               );
             }}

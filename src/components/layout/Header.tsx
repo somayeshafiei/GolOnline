@@ -21,11 +21,12 @@ const Header = () => {
   const accessToken = cookies.get('accessToken');
   const refreshToken = cookies.get('refreshToken');
 
-  const userFirstname = localStorage.getItem('userFirstName');
+  const userFirstname = cookies.get('userFirstName');
   const [cartItems] = useCartStore((state) => [state.cartItems.length]);
   const handleLogOut = () => {
-    localStorage.removeItem('userFirstName');
-    localStorage.removeItem('userLastName');
+    const cookies = new Cookies();
+    cookies.remove('userFirstName');
+    cookies.remove('userLastName');
     instance.get(`http://localhost:8000/api/auth/logout`);
     if (accessToken) {
       cookies.remove('accessToken');

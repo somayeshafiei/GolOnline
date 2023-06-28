@@ -43,14 +43,8 @@ const FormMaker = () => {
               console.log(res);
               if (res.data.status === 'success') {
                 if (res.data.data.user.role === 'ADMIN') {
-                  localStorage.setItem(
-                    'userFirstName',
-                    `${res.data.data.user.firstname}`
-                  );
-                  localStorage.setItem(
-                    'userLastName',
-                    `${res.data.data.user.lastname}`
-                  );
+                  const userFirstName = res.data.data.user.firstname;
+                  const userLastName = res.data.data.user.lastname;
                   const accessToken = res.data.token.accessToken;
                   const refreshToken = res.data.token.refreshToken;
                   const cookies = new Cookies();
@@ -58,16 +52,17 @@ const FormMaker = () => {
                   cookies.set('refreshToken', refreshToken, {
                     path: '/',
                   });
+                  cookies.set('userFirstName', userFirstName, { path: '/' });
+                  cookies.set('userLastName', userLastName, { path: '/' });
+
                   router.push('/dashboard');
                 } else if (res.data.data.user.role !== 'ADMIN') {
-                  localStorage.setItem(
-                    'userFirstName',
-                    `${res.data.data.user.firstname}`
-                  );
-                  localStorage.setItem(
-                    'userLastName',
-                    `${res.data.data.user.lastname}`
-                  );
+                  const userFirstName = res.data.data.user.firstname;
+                  const userLastName = res.data.data.user.lastname;
+                  const cookies = new Cookies();
+                  cookies.set('userFirstName', userFirstName, { path: '/' });
+                  cookies.set('userLastName', userLastName, { path: '/' });
+                  console.log(userFirstName);
                   router.push('/');
                 }
               }
@@ -115,7 +110,7 @@ const FormMaker = () => {
             htmlType="submit"
             style={{ backgroundColor: 'green' }}
           >
-            ورود 
+            ورود
           </Button>
         </Form.Item>
       </Form>
