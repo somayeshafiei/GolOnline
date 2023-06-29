@@ -49,7 +49,7 @@ instance.interceptors.response.use(
             cookies.remove('accessToken');
             cookies.remove('refreshToken');
             // localStorage.removeItem('user_info');
-            // router.push('/login');
+            router.push('/login');
           }
         });
       } else if (config.url === '/auth/token' && config.url !== '/auth/login') {

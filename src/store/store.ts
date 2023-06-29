@@ -8,19 +8,21 @@ interface CartItem {
 
 interface CartState {
   products: CartItem[];
-  deliveryDate:any;
-  setDeliveryDate:(newDate:any)=>void;
+  deliveryDate: any;
+  setDeliveryDate: (newDate: any) => void;
   addToCart: (product: string) => void;
   removeFromCart: (product: string) => void;
   increaseItemCount: (product: string) => void;
   decreaseItemCount: (product: string) => void;
+  clearState: () => void;
 }
 
 const useCartStore = create<CartState>()(
   persist(
     (set) => ({
-      deliveryDate:'',
-      setDeliveryDate:(newDate:any)=>set(() => ({ deliveryDate: newDate })),
+      deliveryDate: '',
+      clearState: () => set({ products: [], deliveryDate: '' }),
+      setDeliveryDate: (newDate: any) => set(() => ({ deliveryDate: newDate })),
       products: [],
       addToCart: (product: string) =>
         set((state) => {

@@ -10,7 +10,7 @@ import Cookies from 'universal-cookie';
 const Payment = () => {
   const cookies = new Cookies();
   const user = cookies.get('userId');
-  const { products, deliveryDate } = useCartStore();
+  const { products, deliveryDate, clearState } = useCartStore();
   const router = useRouter();
   console.log(products);
   console.log(user);
@@ -24,7 +24,7 @@ const Payment = () => {
     console.log(JSON.stringify(orderData));
     const data = JSON.stringify(orderData);
     axios
-      .post(`http://localhost:8000/api/orderss`, data, {
+      .post(`http://localhost:8000/api/orders`, data, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -34,7 +34,8 @@ const Payment = () => {
         if (res.data.status == 'success') {
           message.success('پرداخت با موفقیت انجام شد');
           setTimeout(() => router.push('/payment/success'), 10);
-          localStorage.removeItem('global');
+          clearState();
+          // localStorage.removeItem('global');
           // router.push('/payment/success');
         }
       })

@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Badge, Button, Drawer, Menu } from 'antd';
 import {
   MenuOutlined,
@@ -34,6 +34,9 @@ const Header = () => {
       instance.get(`http://localhost:8000/api/auth/logout`);
     }
   };
+  // useEffect(()=>{
+  //   console.log('ttttttt')
+  // },[accessToken,cartItems])
   return (
     <header className="py-2 flex w-full border-b justify-between px-5 sm:px-10 md:px-[120px]">
       <span className="hidden sm:flex sm:flex-col sm:justify-center sm:items-center sm:justify-items-end">
