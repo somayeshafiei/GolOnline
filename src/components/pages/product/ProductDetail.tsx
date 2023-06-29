@@ -8,15 +8,15 @@ interface Props {
   productDetail: Product;
 }
 function ProductDetail({ productDetail }: Props) {
-  const [cartItems, addToCart, increaseItemCount, decreaseItemCount] =
+  const [products, addToCart, increaseItemCount, decreaseItemCount] =
     useCartStore((state) => [
-      state.cartItems,
+      state.products,
       state.addToCart,
       state.increaseItemCount,
       state.decreaseItemCount,
     ]);
   const getProductCount = (productId: string) => {
-    const item = cartItems.find((item) => item.productId === productId);
+    const item = products.find((item) => item.product === productId);
     return item ? item.count : 0;
   };
   const itemCount = getProductCount(productDetail._id);

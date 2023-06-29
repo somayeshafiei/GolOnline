@@ -45,6 +45,7 @@ const FormMaker = () => {
                 if (res.data.data.user.role === 'ADMIN') {
                   const userFirstName = res.data.data.user.firstname;
                   const userLastName = res.data.data.user.lastname;
+                  const userId = res.data.data.user._id;
                   const accessToken = res.data.token.accessToken;
                   const refreshToken = res.data.token.refreshToken;
                   const cookies = new Cookies();
@@ -54,14 +55,17 @@ const FormMaker = () => {
                   });
                   cookies.set('userFirstName', userFirstName, { path: '/' });
                   cookies.set('userLastName', userLastName, { path: '/' });
+                  cookies.set('userId', userId, { path: '/' });
 
                   router.push('/dashboard');
                 } else if (res.data.data.user.role !== 'ADMIN') {
                   const userFirstName = res.data.data.user.firstname;
                   const userLastName = res.data.data.user.lastname;
+                  const userId = res.data.data.user._id;
                   const cookies = new Cookies();
                   cookies.set('userFirstName', userFirstName, { path: '/' });
                   cookies.set('userLastName', userLastName, { path: '/' });
+                  cookies.set('userId', userId, { path: '/' });
                   console.log(userFirstName);
                   router.push('/');
                 }

@@ -22,15 +22,16 @@ const Header = () => {
   const refreshToken = cookies.get('refreshToken');
 
   const userFirstname = cookies.get('userFirstName');
-  const [cartItems] = useCartStore((state) => [state.cartItems.length]);
+  const [cartItems] = useCartStore((state) => [state.products.length]);
   const handleLogOut = () => {
     const cookies = new Cookies();
     cookies.remove('userFirstName');
     cookies.remove('userLastName');
-    instance.get(`http://localhost:8000/api/auth/logout`);
+    cookies.remove('userId');
     if (accessToken) {
       cookies.remove('accessToken');
       cookies.remove('refreshToken');
+      instance.get(`http://localhost:8000/api/auth/logout`);
     }
   };
   return (

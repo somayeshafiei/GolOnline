@@ -1,73 +1,76 @@
+import { DateObject } from 'react-multi-date-picker';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 interface CartItem {
-  productId: string;
+  product: string;
   count: number;
 }
 
 interface CartState {
-  cartItems: CartItem[];
-  addToCart: (productId: string) => void;
-  removeFromCart: (productId: string) => void;
-  increaseItemCount: (productId: string) => void;
-  decreaseItemCount: (productId: string) => void;
+  products: CartItem[];
+  deliveryDate:any;
+  setDeliveryDate:(newDate:any)=>void;
+  addToCart: (product: string) => void;
+  removeFromCart: (product: string) => void;
+  increaseItemCount: (product: string) => void;
+  decreaseItemCount: (product: string) => void;
 }
 
 const useCartStore = create<CartState>()(
   persist(
     (set) => ({
-      cartItems: [],
-      addToCart: (productId: string) =>
+      deliveryDate:'',
+      setDeliveryDate:(newDate:any)=>set(() => ({ deliveryDate: newDate })),
+      products: [],
+      addToCart: (product: string) =>
         set((state) => {
-          const itemIndex = state.cartItems.findIndex(
-            (item) => item.productId === productId
+          const itemIndex = state.products.findIndex(
+            (item) => item.product === product
           );
           if (itemIndex === -1) {
-            return { cartItems: [...state.cartItems, { productId, count: 1 }] };
+            return { products: [...state.products, { product, count: 1 }] };
           } else {
-            const updatedCartItems = [...state.cartItems];
-            updatedCartItems[itemIndex].count += 1;
-            return { cartItems: updatedCartItems };
+            const updatedProducts = [...state.products];
+            updatedProducts[itemIndex].count += 1;
+            return { cartItems: updatedProducts };
           }
         }),
-      removeFromCart: (productId: string) =>
+      removeFromCart: (product: string) =>
         set((state) => ({
-          cartItems: state.cartItems.filter(
-            (item) => item.productId !== productId
-          ),
+          products: state.products.filter((item) => item.product !== product),
         })),
-      increaseItemCount: (productId: string) =>
+      increaseItemCount: (product: string) =>
         set((state) => {
-          const itemIndex = state.cartItems.findIndex(
-            (item) => item.productId === productId
+          const itemIndex = state.products.findIndex(
+            (item) => item.product === product
           );
           if (itemIndex === -1) {
             return state;
           } else {
-            const updatedCartItems = [...state.cartItems];
+            const updatedCartItems = [...state.products];
             updatedCartItems[itemIndex].count += 1;
-            return { cartItems: updatedCartItems };
+            return { products: updatedCartItems };
           }
         }),
-      decreaseItemCount: (productId: string) =>
+      decreaseItemCount: (product: string) =>
         set((state) => {
-          const itemIndex = state.cartItems.findIndex(
-            (item) => item.productId === productId
+          const itemIndex = state.products.findIndex(
+            (item) => item.product === product
           );
           if (itemIndex === -1) {
             return state;
           } else {
-            const updatedCartItems = [...state.cartItems];
+            const updatedCartItems = [...state.products];
             updatedCartItems[itemIndex].count -= 1;
             if (updatedCartItems[itemIndex].count === 0) {
               updatedCartItems.splice(itemIndex, 1);
             }
-            return { cartItems: updatedCartItems };
+            return { products: updatedCartItems };
           }
         }),
     }),
-    { name: 'global', getStorage: () => localStorage },
-  ),
+    { name: 'global', getStorage: () => localStorage }
+  )
 );
 
 export default useCartStore;

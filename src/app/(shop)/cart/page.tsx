@@ -10,8 +10,8 @@ import Cookies from 'universal-cookie';
 import { useRouter } from 'next/navigation';
 
 const Cart = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const { cartItems, removeFromCart, increaseItemCount, decreaseItemCount } =
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const { products, removeFromCart, increaseItemCount, decreaseItemCount } =
     useCartStore();
   const cookies = new Cookies();
   const userFirstName = cookies.get('userFirstName');
@@ -21,18 +21,18 @@ const Cart = () => {
   };
   useEffect(() => {
     const fetchProducts = async () => {
-      const productIds = cartItems.map((item) => item.productId);
+      const productIds = products.map((item) => item.product);
       const productRequests = productIds.map((id) =>
         fetch(`http://localhost:8000/api/products/${id}`)
           .then((response) => response.json())
           .then((res) => res.data.product)
       );
       const productData = await Promise.all(productRequests);
-      setProducts(productData);
+      setAllProducts(productData);
     };
 
     fetchProducts();
-  }, [cartItems]);
+  }, [products]);
 
   const columns = [
     {
@@ -110,10 +110,10 @@ const Cart = () => {
     },
   ];
 
-  const data = cartItems.map((item) => {
-    const product = products.find((p) => p._id === item.productId);
+  const data = products.map((item) => {
+    const product = allProducts.find((p) => p._id === item.product);
     return {
-      key: item.productId,
+      key: item.product,
       name: product?.name,
       price: product?.price,
       description: product?.description,
