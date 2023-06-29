@@ -20,7 +20,7 @@ interface CartState {
 const useCartStore = create<CartState>()(
   persist(
     (set) => ({
-      deliveryDate: '',
+      deliveryDate: new Date(),
       clearState: () => set({ products: [], deliveryDate: '' }),
       setDeliveryDate: (newDate: any) => set(() => ({ deliveryDate: newDate })),
       products: [],

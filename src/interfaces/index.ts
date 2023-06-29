@@ -68,3 +68,30 @@ export interface CartRecord {
   images: string;
   quantity: number;
 }
+export interface Order {
+  _id: string;
+  user: {
+    _id: string;
+    firstname: string;
+    lastname: string;
+    username: string;
+    phoneNumber: number;
+    address: string;
+    role: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+  };
+  products: [
+    {
+      product: any;
+      count: number;
+      _id: string;
+    }
+  ];
+  totalPrice: number;
+  deliveryDate: string;
+  deliveryStatus: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -1,4 +1,5 @@
 'use server';
+import { Order } from '@/interfaces';
 import { revalidateTag } from 'next/cache';
 
 async function DeleteProduct(record: string, accessToken: string) {
@@ -55,5 +56,12 @@ export async function EditProduct(
   } catch (error) {
     console.log(error);
   }
+}
+export async function handleDelivery(
+  selectedRecord: Order,
+  isModalVisible: boolean
+) {
+  console.log(selectedRecord);
+  console.log(isModalVisible);
 }
 export default DeleteProduct;

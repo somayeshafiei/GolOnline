@@ -20,11 +20,14 @@ const Checkout = () => {
   const changeRoute = (route: string) => {
     router.push(route);
   };
-  const handleDateChange = (date: DateObject | null) => {
+  const handleDateChange = (date: any) => {
     if (date) {
-      const validDate = new Date(date.year, date.month - 1, date.day);
-      setDeliveryDate(validDate);
-      console.log(validDate);
+      // const validDate = new Date(date.year, date.month - 1, date.day);
+      // const isoString = date.toISOString();
+      const dateValue = new Date(date);
+      const isoString = dateValue.toISOString();
+      setDeliveryDate(isoString);
+      console.log(isoString);
     } else {
       setDeliveryDate(undefined);
     }
@@ -89,11 +92,11 @@ const Checkout = () => {
           <div className="p-3">
             <Form.Item label="تاریخ تحویل" name={'deliveryDate'}>
               <DatePicker
-                calendar={persian}
+                // calendar={persian}
                 // locale={persian_fa}
                 calendarPosition="bottom-right"
                 value={deliveryDate}
-                onChange={handleDateChange}
+                onChange={(date) => handleDateChange(date)}
                 // (dateObject) => {
                 //   console.log(dateObject?.format());
                 //   setDeliveryDate(dateObject?.format());

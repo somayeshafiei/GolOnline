@@ -2,55 +2,18 @@
 interface Props {
   orders: Order[];
 }
-interface Order {
-  _id: string;
-  user: {
-    _id: string;
-    firstname: string;
-    lastname: string;
-    username: string;
-    phoneNumber: number;
-    address: string;
-    role: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-  };
-  products: [
-    {
-      product: string;
-      count: number;
-      _id: string;
-    }
-  ];
-  totalPrice: number;
-  deliveryDate: string;
-  deliveryStatus: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
 
 import formatDate from '@/utils/formatDate';
-import { Button, Table } from 'antd';
+import { Button, Modal, Table } from 'antd';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import ChangeDeliveryStatusTable from './ChangeDeliveryStatusTable';
+import { Order } from '@/interfaces';
+import { handleDelivery } from '@/actions';
 export default function OrdersTable({ orders }: Props) {
-  // const router = useRouter();
-  // const pathname = usePathname();
-  // const searchParams = useSearchParams();
-  // const createQueryString = (name: any, value: any) => {
-  //   let url = new URL('http://localhost:8000/api/orders?');
-  //   // let params = new URLSearchParams(url.search);
-  //   // Add a third parameter.
-  //   // params.set("baz", 3);
-  //   // params.toString(); // "foo=1&bar=2&baz=3"
-  //   let params = new URLSearchParams(url.search);
-  //   params.set(name, value);
-
-  //   return params.toString();
-  // };
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState<Order | null>(null);
   const [columns, setColumns] = useState([
     {
       title: 'نام کاربر',
@@ -91,10 +54,18 @@ export default function OrdersTable({ orders }: Props) {
     },
     {
       title: 'عملیات',
-      dataIndex: 'actions',
-      render: () => (
+      dataIndex: '',
+      key: '_id',
+      render: (record: Order) => (
         <div className="flex items-center justify-center w-full h-full gap-3">
-          <Button>بررسی سفارش</Button>
+          <Button
+            onClick={() => {
+              setSelectedRecord(record);
+              setIsModalVisible(true);
+            }}
+          >
+            بررسی سفارش
+          </Button>
         </div>
       ),
     },
@@ -102,7 +73,10 @@ export default function OrdersTable({ orders }: Props) {
   const [dataSource, setDataSource] = useState(
     orders && Array.isArray(orders) ? orders : []
   );
-
+  // useEffect(() => {
+  //   console.log(isModalVisible);
+  //   setTest(!test);
+  // }, [isModalVisible, selectedRecord]);
   return (
     <>
       <Table
@@ -116,6 +90,45 @@ export default function OrdersTable({ orders }: Props) {
             `${range[0]}-${range[1]} of ${total} items`,
         }}
       />
+      <Modal
+        title="جزئیات سفارش"
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={null}
+      >
+        {selectedRecord && (
+          <div className="pr-2 flex flex-col item-center justify-center gap-2">
+            <p>
+              نام مشتری : {selectedRecord.user.firstname}{' '}
+              {selectedRecord.user.lastname}
+            </p>
+            {/* <p>نام خانوادگی : {selectedRecord.user.lastname}</p> */}
+            <p> تلفن : {selectedRecord.user.phoneNumber}</p>
+            <p> آدرس : {selectedRecord.user.address}</p>
+            <p>زمان سفارش: {formatDate(selectedRecord.createdAt)}</p>
+            <p>زمان تحویل : {formatDate(selectedRecord.deliveryDate)}</p>
+            <div>
+              <ChangeDeliveryStatusTable order={selectedRecord} />
+              {/* {selectedRecord.products.map(
+                (pro) => pro.product && <p key={pro._id}>{pro.product.name}</p>
+              )} */}
+            </div>
+            {selectedRecord.deliveryStatus ? (
+              <p>وضعیت تحویل: تحویل داده شده</p>
+            ) : (
+              <form
+                action={() => handleDelivery(selectedRecord, isModalVisible)}
+              >
+                <Button htmlType="submit">ارسال شد</Button>
+              </form>
+            )}
+            {/* <p>
+              وضعیت تحویل:{' '}
+              {selectedRecord.deliveryStatus ? 'تحویل داده شده' : ''}
+            </p> */}
+          </div>
+        )}
+      </Modal>
     </>
   );
 }
