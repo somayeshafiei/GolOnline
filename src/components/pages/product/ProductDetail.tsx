@@ -1,6 +1,7 @@
 'use client';
 import Product from '@/interfaces';
 import useCartStore from '@/store/store';
+import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Rate, message } from 'antd';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -42,28 +43,69 @@ function ProductDetail({ productDetail }: Props) {
             </div>
           </div>
           <div className="flex py-4 w-[20%]">
-            <Button
-              onClick={() => decreaseItemCount(productDetail._id)}
-              disabled={itemCount === 0}
-            >
-              -
-            </Button>
+            {itemCount !== 1 ? (
+              <Button
+                onClick={() => decreaseItemCount(productDetail._id)}
+                danger
+                // disabled={itemCount === 0}
+              >
+                -
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  decreaseItemCount(productDetail._id);
+                  message.warning(
+                    'محصول مورد نظر با موفقیت از سبد خرید حذف شد'
+                  );
+                }}
+                danger
+              >
+                <DeleteOutlined style={{ color: 'red', fontSize: '24' }} />
+              </Button>
+            )}
+
             <input type="number" className=" px-2 w-12" value={itemCount} />
-            <Button
-              onClick={() => increaseItemCount(productDetail._id)}
-              disabled={itemCount === productDetail.quantity}
-            >
-              +
-            </Button>
+            {itemCount === 0 ? (
+              <Button
+                onClick={() => {
+                  itemCount < productDetail.quantity
+                    ? (addToCart(productDetail._id),
+                      message.success('محصول با موفقیت به سبد خرید اضافه شد'))
+                    : message.error('محصول موجود نیست');
+                }}
+              >
+                +
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  increaseItemCount(productDetail._id);
+                  message.info('تعداد محصول مورد نظر در سبد خرید اضافه شد');
+                }}
+                disabled={itemCount === productDetail.quantity}
+              >
+                +
+              </Button>
+            )}
           </div>
-          <Button
-            onClick={() =>{ 
-              addToCart(productDetail._id);
-              message.success('محصول با موفقیت به سبد خرید اضافه شد')
-            }}
-          >
-            افزودن به سبد خرید
-          </Button>
+          {itemCount < productDetail.quantity ? (
+            <Button
+              onClick={() => {
+                itemCount === 0
+                  ? (addToCart(productDetail._id),
+                    message.success('محصول با موفقیت به سبد خرید اضافه شد'))
+                  : (addToCart(productDetail._id),
+                    message.info('تعداد محصول مورد نظر در سبد خرید اضافه شد'));
+              }}
+            >
+              افزودن به سبد خرید
+            </Button>
+          ) : (
+            <Button disabled onClick={() => message.error('محصول موجود نیست')}>
+              افزودن به سبد خرید
+            </Button>
+          )}
         </div>
       </div>
     </div>
