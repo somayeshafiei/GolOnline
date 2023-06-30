@@ -45,11 +45,11 @@ instance.interceptors.response.use(
             config.headers.Authorization = 'Bearer ' + accessToken;
             return instance(config);
           } else {
-            const router = useRouter();
+            // const router = useRouter();
             cookies.remove('accessToken');
             cookies.remove('refreshToken');
             // localStorage.removeItem('user_info');
-            router.push('/login');
+            // router.push('/login');
           }
         });
       } else if (config.url === '/auth/token' && config.url !== '/auth/login') {

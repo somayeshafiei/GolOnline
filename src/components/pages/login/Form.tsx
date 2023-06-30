@@ -57,7 +57,7 @@ const FormMaker = () => {
                   cookies.set('userLastName', userLastName, { path: '/' });
                   cookies.set('userId', userId, { path: '/' });
 
-                  router.push('/dashboard');
+                  router.push('/dashboard/orders');
                 } else if (res.data.data.user.role !== 'ADMIN') {
                   const userFirstName = res.data.data.user.firstname;
                   const userLastName = res.data.data.user.lastname;

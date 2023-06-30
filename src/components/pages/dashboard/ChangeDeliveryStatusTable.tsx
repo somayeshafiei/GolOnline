@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function ChangeDeliveryStatusTable({ order }: any) {
-  console.log(order.products.map((pro) => console.log(pro)));
+  console.log(order.products.map((pro:any) => console.log(pro)));
   const [columns, setColumns] = useState([
     {
       title: 'کالا ',

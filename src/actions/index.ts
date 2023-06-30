@@ -59,34 +59,40 @@ export async function EditProduct(
 }
 export async function handleDelivery(
   selectedRecord: Order,
-  setIsModalVisible:(value:boolean)=>void ,
   accessToken: string
 ) {
-  // const test = {
-  //   ...selectedRecord,
-  //   deliveryStatus: true,
-  // };
+  const newOrder = {
+    // user: selectedRecord.user._id,
+    products: selectedRecord.products.map((pro) => {
+      const final = {
+        product: pro.product._id,
+        count: pro.count,
+      };
+      return final;
+    }),
+    deliveryStatus: true,
+  };
   try {
     const res = await fetch(
       `http://localhost:8000/api/orders/${selectedRecord._id}`,
       {
         method: 'PATCH',
         headers: {
-          Authorization: 'Bearer ' + accessToken,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ deliveryStatus: true }),
+        body: JSON.stringify(newOrder),
       }
     );
     const result = await res.json();
     console.log(result);
     revalidateTag('orders');
-    setIsModalVisible(false)
+    // setIsModalVisible(false);
   } catch (error) {
     console.log(error);
   }
 
   console.log(selectedRecord.deliveryStatus);
-  console.log(test);
+  // console.log(test);
   // console.log(isModalVisible);
 }
 export default DeleteProduct;

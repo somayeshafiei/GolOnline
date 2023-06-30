@@ -74,10 +74,10 @@ export default function OrdersTable({ orders }: Props) {
   const [dataSource, setDataSource] = useState(
     orders && Array.isArray(orders) ? orders : []
   );
-  // useEffect(() => {
-  //   console.log(isModalVisible);
-  //   setTest(!test);
-  // }, [isModalVisible, selectedRecord]);
+  useEffect(() => {
+    setDataSource(orders);
+    setIsModalVisible(false);
+  }, [orders]);
   return (
     <>
       <Table
@@ -118,10 +118,11 @@ export default function OrdersTable({ orders }: Props) {
               <p>وضعیت تحویل: تحویل داده شده</p>
             ) : (
               <form
-                action={() =>{
+                action={() => {
                   const cookies = new Cookies();
                   const accessToken = cookies.get('accessToken');
-                   handleDelivery(selectedRecord, setIsModalVisible,accessToken)}}
+                  return handleDelivery(selectedRecord, accessToken);
+                }}
               >
                 <Button htmlType="submit">ارسال شد</Button>
               </form>
