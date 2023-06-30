@@ -59,13 +59,13 @@ export async function EditProduct(
 }
 export async function handleDelivery(
   selectedRecord: Order,
-  isModalVisible: boolean,
+  setIsModalVisible:(value:boolean)=>void ,
   accessToken: string
 ) {
-  const test = {
-    ...selectedRecord,
-    deliveryStatus: true,
-  };
+  // const test = {
+  //   ...selectedRecord,
+  //   deliveryStatus: true,
+  // };
   try {
     const res = await fetch(
       `http://localhost:8000/api/orders/${selectedRecord._id}`,
@@ -80,6 +80,7 @@ export async function handleDelivery(
     const result = await res.json();
     console.log(result);
     revalidateTag('orders');
+    setIsModalVisible(false)
   } catch (error) {
     console.log(error);
   }

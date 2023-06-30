@@ -121,7 +121,7 @@ export default function OrdersTable({ orders }: Props) {
                 action={() =>{
                   const cookies = new Cookies();
                   const accessToken = cookies.get('accessToken');
-                   handleDelivery(selectedRecord, isModalVisible,accessToken)}}
+                   handleDelivery(selectedRecord, setIsModalVisible,accessToken)}}
               >
                 <Button htmlType="submit">ارسال شد</Button>
               </form>
