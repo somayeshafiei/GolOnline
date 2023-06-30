@@ -1,4 +1,7 @@
+import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
+import { Suspense } from 'react';
+import Loading from '../loading';
 
 export default function shopLayout({
   children,
@@ -7,10 +10,11 @@ export default function shopLayout({
 }) {
   return (
     <div className="flex flex-col h-full">
-      {/* <header className="h-14 p-10 bg-green-300 text-center">فروشگاه</header> */}
       <Header />
-      <main className="flex-1 h-full">{children}</main>
-      <footer className="bg-green-500 h-20 text-center">فوتر</footer>
+      <main className="flex-1">
+        <Suspense fallback={<Loading />}>{children}</Suspense>
+      </main>
+      <Footer />
     </div>
   );
 }

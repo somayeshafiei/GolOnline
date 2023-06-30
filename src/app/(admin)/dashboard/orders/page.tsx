@@ -1,18 +1,33 @@
 import instance from '@/api/constants';
 import OrdersTable from '@/components/pages/dashboard/OrdersTable';
 
-export async function getData() {
-  const res = await instance.get('http://localhost:8000/api/orders');
-  if (res.status !== 200) {
+// export async function getData() {
+//   const res = await instance.get(`http://localhost:8000/api/orders`);
+//   if (res.status !== 200) {
+//     // This will activate the closest `error.js` Error Boundary
+//     throw new Error('Failed to fetch data');
+//   }
+
+//   return res.data;
+// }
+export async function getOrders() {
+  const res = await fetch('http://localhost:8000/api/orders?limit=all', {
+    cache: 'no-store',
+    next: { tags: ['orders'] },
+  });
+  // , {
+  //   next: { tags: ['products'] },
+  // }
+  if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data');
   }
 
-  return res.data;
+  return res.json();
 }
 
 export default async function dashboardOrdersPage() {
-  const res = await getData();
+  const res = await getOrders();
   const result = [...res.data.orders];
   console.log(result);
   return (

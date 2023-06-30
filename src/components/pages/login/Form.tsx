@@ -42,14 +42,33 @@ const FormMaker = () => {
             .then((res) => {
               console.log(res);
               if (res.data.status === 'success') {
-                const accessToken = res.data.token.accessToken;
-                const refreshToken = res.data.token.refreshToken;
-                const cookies = new Cookies();
-                cookies.set('accessToken', accessToken, { path: '/' });
-                cookies.set('refreshToken', refreshToken, {
-                  path: '/',
-                });
-                router.push('/dashboard');
+                if (res.data.data.user.role === 'ADMIN') {
+                  const userFirstName = res.data.data.user.firstname;
+                  const userLastName = res.data.data.user.lastname;
+                  const userId = res.data.data.user._id;
+                  const accessToken = res.data.token.accessToken;
+                  const refreshToken = res.data.token.refreshToken;
+                  const cookies = new Cookies();
+                  cookies.set('accessToken', accessToken, { path: '/' });
+                  cookies.set('refreshToken', refreshToken, {
+                    path: '/',
+                  });
+                  cookies.set('userFirstName', userFirstName, { path: '/' });
+                  cookies.set('userLastName', userLastName, { path: '/' });
+                  cookies.set('userId', userId, { path: '/' });
+
+                  router.push('/dashboard/orders');
+                } else if (res.data.data.user.role !== 'ADMIN') {
+                  const userFirstName = res.data.data.user.firstname;
+                  const userLastName = res.data.data.user.lastname;
+                  const userId = res.data.data.user._id;
+                  const cookies = new Cookies();
+                  cookies.set('userFirstName', userFirstName, { path: '/' });
+                  cookies.set('userLastName', userLastName, { path: '/' });
+                  cookies.set('userId', userId, { path: '/' });
+                  console.log(userFirstName);
+                  router.push('/');
+                }
               }
             });
         }}
@@ -82,7 +101,7 @@ const FormMaker = () => {
               message: 'لطفا رمز عبور خود را وارد کنید',
             },
             { whitespace: true, message: 'رمز نمی تواند خالی باشد' },
-            { min: 3 },
+            { min: 3, message: 'رمز نمی تواند کمتر از ۳ کاراکتر باشد' },
           ]}
           hasFeedback
         >
@@ -95,7 +114,7 @@ const FormMaker = () => {
             htmlType="submit"
             style={{ backgroundColor: 'green' }}
           >
-            ورود به پنل ادمین
+            ورود
           </Button>
         </Form.Item>
       </Form>
