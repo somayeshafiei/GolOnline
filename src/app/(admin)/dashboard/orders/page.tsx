@@ -12,7 +12,7 @@ import OrdersTable from '@/components/pages/dashboard/OrdersTable';
 // }
 export async function getOrders() {
   const res = await fetch('http://localhost:8000/api/orders?limit=all', {
-    cache: 'no-store',
+    cache: 'no-store',next: { tags: ['orders'] }
   });
   // , {
   //   next: { tags: ['products'] },

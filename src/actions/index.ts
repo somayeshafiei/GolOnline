@@ -59,9 +59,33 @@ export async function EditProduct(
 }
 export async function handleDelivery(
   selectedRecord: Order,
-  isModalVisible: boolean
+  isModalVisible: boolean,
+  accessToken: string
 ) {
-  console.log(selectedRecord);
-  console.log(isModalVisible);
+  const test = {
+    ...selectedRecord,
+    deliveryStatus: true,
+  };
+  try {
+    const res = await fetch(
+      `http://localhost:8000/api/orders/${selectedRecord._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: 'Bearer ' + accessToken,
+        },
+        body: JSON.stringify({ deliveryStatus: true }),
+      }
+    );
+    const result = await res.json();
+    console.log(result);
+    revalidateTag('orders');
+  } catch (error) {
+    console.log(error);
+  }
+
+  console.log(selectedRecord.deliveryStatus);
+  console.log(test);
+  // console.log(isModalVisible);
 }
 export default DeleteProduct;

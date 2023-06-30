@@ -11,6 +11,7 @@ import { useCallback, useEffect, useState } from 'react';
 import ChangeDeliveryStatusTable from './ChangeDeliveryStatusTable';
 import { Order } from '@/interfaces';
 import { handleDelivery } from '@/actions';
+import Cookies from 'universal-cookie';
 export default function OrdersTable({ orders }: Props) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<Order | null>(null);
@@ -117,7 +118,10 @@ export default function OrdersTable({ orders }: Props) {
               <p>وضعیت تحویل: تحویل داده شده</p>
             ) : (
               <form
-                action={() => handleDelivery(selectedRecord, isModalVisible)}
+                action={() =>{
+                  const cookies = new Cookies();
+                  const accessToken = cookies.get('accessToken');
+                   handleDelivery(selectedRecord, isModalVisible,accessToken)}}
               >
                 <Button htmlType="submit">ارسال شد</Button>
               </form>
