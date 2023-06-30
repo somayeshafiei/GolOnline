@@ -5,6 +5,7 @@ import React, { Suspense, useState } from 'react';
 import Cookies from 'universal-cookie';
 import DatePicker, { DateObject } from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
+import persian_fa from 'react-date-object/locales/persian_fa';
 import { redirect, useRouter } from 'next/navigation';
 import useCartStore from '@/store/store';
 
@@ -22,12 +23,8 @@ const Checkout = () => {
   };
   const handleDateChange = (date: any) => {
     if (date) {
-      // const validDate = new Date(date.year, date.month - 1, date.day);
-      // const isoString = date.toISOString();
-      const dateValue = new Date(date);
-      const isoString = dateValue.toISOString();
-      setDeliveryDate(isoString);
-      console.log(isoString);
+      const final = date.unix.toString();
+      setDeliveryDate(final);
     } else {
       setDeliveryDate(undefined);
     }
@@ -92,20 +89,16 @@ const Checkout = () => {
           <div className="p-3">
             <Form.Item label="تاریخ تحویل" name={'deliveryDate'}>
               <DatePicker
-                // calendar={persian}
-                // locale={persian_fa}
+                calendar={persian}
+                locale={persian_fa}
                 calendarPosition="bottom-right"
                 value={deliveryDate}
                 onChange={(date) => handleDateChange(date)}
-                // (dateObject) => {
-                //   console.log(dateObject?.format());
-                //   setDeliveryDate(dateObject?.format());
-                // }
+                minDate={new Date().setDate(31)}
               />
             </Form.Item>
           </div>
           <Form.Item className="w-full flex justify-center">
-            {/* <Link href={'http://localhost:3001'}> */}
             <Button
               htmlType="submit"
               className="bg-green-400 w-44"
@@ -113,7 +106,6 @@ const Checkout = () => {
             >
               پرداخت
             </Button>
-            {/* </Link> */}
           </Form.Item>
         </Form>
       </div>

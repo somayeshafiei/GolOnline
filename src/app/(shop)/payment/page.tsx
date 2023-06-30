@@ -19,7 +19,7 @@ const Payment = () => {
     const orderData = {
       user,
       products,
-      deliveryDate,
+      deliveryDate: +deliveryDate * 1000,
     };
     console.log(JSON.stringify(orderData));
     const data = JSON.stringify(orderData);
