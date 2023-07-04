@@ -5,6 +5,9 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { Button, Rate, message } from 'antd';
 import Image from 'next/image';
 import { useState } from 'react';
+import App from './Slider';
+import ThumbnailSlider from './Slider';
+
 interface Props {
   productDetail: Product;
 }
@@ -25,16 +28,17 @@ function ProductDetail({ productDetail }: Props) {
     <div>
       <div className="w-full flex gap-5">
         <div className="w-[50%] relative h-96">
-          <Image
+          <ThumbnailSlider images={productDetail.images} />
+          {/* <Image
             fill
             src={`http://localhost:8000/images/products/images/${productDetail.images[0]}`}
             alt={`${productDetail.images[0]}`}
-          ></Image>
+          ></Image> */}
         </div>
         <div className="w-[50%] ">
           <h1 className="font-bold text-2xl pb-3">{productDetail.name}</h1>
           <div className="flex w-full items-center justify-between border-b border-b-green-300 pb-2">
-            <div className="flex gap-1 font-bold text-[#46A358]">
+            <div className="flex gap-1 font-bold text-['#46A358'] text-md">
               <span>{productDetail.price}</span>
               <span>تومان</span>
             </div>

@@ -225,13 +225,13 @@ export default function EditProductForm({ record, categories }: Props) {
               data.append('subcategory', initialsubcategoryId);
             }
 
-            if (thumbnailNewPreview) {
-              data.append('thumbnail', thumbnailNewPreview);
-            } else {
-              data.append('thumbnail', thumbNail);
-            }
-            data.append('images', imagesFile);
-            console.log(`Selected file: ${thumbNail}`);
+            // if (thumbnailNewPreview) {
+            //   data.append('thumbnail', thumbnailNewPreview);
+            // } else {
+            //   data.append('thumbnail', thumbNail);
+            // }
+            // data.append('images', imagesFile);
+            // console.log(`Selected file: ${thumbNail}`);
             console.log(imagesFile);
             const finalData = Object.fromEntries(data);
             console.log(finalData);

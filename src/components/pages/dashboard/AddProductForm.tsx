@@ -74,7 +74,7 @@ export default function AddProductForm({ categories }: Props) {
   // const thumbnailPrev = thumbNailInputRef.current?.files[0];
   useEffect(() => {
     console.log(thumbnailPreview);
-  }, [thumbnailPreview, thumbNailInputRef.current]);
+  }, [thumbnailPreview]);
   return (
     <>
       <form action={() => setModal1Open(true)}>

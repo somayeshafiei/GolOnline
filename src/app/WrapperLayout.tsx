@@ -9,7 +9,7 @@ export default function WrapperLayout({
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: '#46a358',
+          colorPrimary: '#AF6EA0',
           fontFamily: 'iransans',
         },
       }}
