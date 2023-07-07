@@ -28,12 +28,12 @@ function ProductDetail({ productDetail }: Props) {
     <div>
       <div className="w-full flex gap-5">
         <div className="w-[50%] relative h-96">
-          <ThumbnailSlider images={productDetail.images} />
-          {/* <Image
+          {/* <ThumbnailSlider images={productDetail.images} /> */}
+          <Image
             fill
             src={`http://localhost:8000/images/products/images/${productDetail.images[0]}`}
             alt={`${productDetail.images[0]}`}
-          ></Image> */}
+          ></Image>
         </div>
         <div className="w-[50%] ">
           <h1 className="font-bold text-2xl pb-3">{productDetail.name}</h1>
@@ -112,6 +112,8 @@ function ProductDetail({ productDetail }: Props) {
           )}
         </div>
       </div>
+      <h2 className="my-3">توضیحات محصول</h2>
+      <div dangerouslySetInnerHTML={{ __html: productDetail.description }} />
     </div>
   );
 }
