@@ -17,27 +17,27 @@ export default function OrdersTable({ orders }: Props) {
   const [selectedRecord, setSelectedRecord] = useState<Order | null>(null);
   const [columns, setColumns] = useState([
     {
-      title: 'نام کاربر',
+      title: 'عملیات',
       dataIndex: '',
-      key: 'user',
-      render: (record: Order) => <span>{record.user.username}</span>,
-    },
-    {
-      title: 'مجموع مبلغ',
-      dataIndex: 'totalPrice',
-    },
-    {
-      title: ' زمان ثبت سفارش',
-      dataIndex: '',
-      key: 'createdAt',
-      render: (record: Order) => {
-        const dateValue = formatDate(record.createdAt);
-        return <span>{dateValue}</span>;
-      },
+      align: 'center',
+      key: '_id',
+      render: (record: Order) => (
+        <div className="flex items-center justify-center w-full h-full gap-3">
+          <Button
+            onClick={() => {
+              setSelectedRecord(record);
+              setIsModalVisible(true);
+            }}
+          >
+            بررسی سفارش
+          </Button>
+        </div>
+      ),
     },
     {
       title: 'وضعیت تحویل',
       dataIndex: '',
+      align: 'center',
       key: 'deliveryStatus',
       render: (record: Order) =>
         record.deliveryStatus ? (
@@ -54,21 +54,26 @@ export default function OrdersTable({ orders }: Props) {
       },
     },
     {
-      title: 'عملیات',
+      title: ' زمان ثبت سفارش',
+      align: 'center',
       dataIndex: '',
-      key: '_id',
-      render: (record: Order) => (
-        <div className="flex items-center justify-center w-full h-full gap-3">
-          <Button
-            onClick={() => {
-              setSelectedRecord(record);
-              setIsModalVisible(true);
-            }}
-          >
-            بررسی سفارش
-          </Button>
-        </div>
-      ),
+      key: 'createdAt',
+      render: (record: Order) => {
+        const dateValue = formatDate(record.createdAt);
+        return <span>{dateValue}</span>;
+      },
+    },
+    {
+      title: 'مجموع مبلغ(تومان)',
+      align: 'center',
+      dataIndex: 'totalPrice',
+    },
+    {
+      title: 'نام کاربر',
+      align: 'center',
+      dataIndex: '',
+      key: 'user',
+      render: (record: Order) => <span>{record.user.username}</span>,
     },
   ]);
   const [dataSource, setDataSource] = useState(
@@ -79,14 +84,14 @@ export default function OrdersTable({ orders }: Props) {
     setIsModalVisible(false);
   }, [orders]);
   return (
-    <>
+    <div dir="ltr">
       <Table
         columns={columns}
         dataSource={dataSource}
         pagination={{
           pageSize: 3,
           total: orders.length,
-          showSizeChanger: true,
+          // showSizeChanger: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} of ${total} items`,
         }}
@@ -134,6 +139,6 @@ export default function OrdersTable({ orders }: Props) {
           </div>
         )}
       </Modal>
-    </>
+    </div>
   );
 }

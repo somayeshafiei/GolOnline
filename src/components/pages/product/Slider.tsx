@@ -12,21 +12,21 @@ interface props {
   // setThumbsSwiper: React.Dispatch<React.SetStateAction<null>>;
   images: string[];
 }
-const ThumbnailSlider = ({ setThumbsSwiper,images }: props) => {
+const ThumbnailSlider = ({ images }: props) => {
   return (
     <div className="w-full h-full">
       <Swiper
-        onSwiper={setThumbsSwiper}
+        // onSwiper={setThumbsSwiper}
         spaceBetween={10}
         slidesPerView={4}
         freeMode={true}
         watchSlidesProgress={true}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="h-full"
+        className="h-full w-full"
       >
         {images?.map((item) => (
           <SwiperSlide key={item}>
-            <div className="bg-white cursor-pointer p-[.35rem] rounded-md">
+            <div className="bg-white cursor-pointer p-[.35rem] rounded-md w-full">
               <Image
                 className="rounded-md"
                 src={`http://localhost:8000/images/products/images/${item}`}

@@ -33,35 +33,51 @@ const Cart = () => {
 
     fetchProducts();
   }, [products]);
+  type TablePaginationPosition =
+    | 'topLeft'
+    | 'topCenter'
+    | 'topRight'
+    | 'bottomLeft'
+    | 'bottomCenter'
+    | 'bottomRight';
 
   const columns = [
     {
-      title: 'تصویر',
-      dataIndex: 'images',
-      render: (images: string) => (
-        <Image
-          loading="lazy"
-          height={100}
-          width={100}
-          alt="pic"
-          src={`http://localhost:8000/images/products/images/${images}`}
-        />
+      title: '',
+      dataIndex: 'key',
+      align: 'center',
+      render: (key: string) => (
+        <Popconfirm
+          title="این محصول از سبد خرید حذف شود؟"
+          onConfirm={() => {
+            removeFromCart(key);
+            message.success('محصول با موفقیت از سبد خرید حذف شد');
+          }}
+          okText="بله"
+          cancelText="خیر"
+          okButtonProps={{ style: { backgroundColor: 'red' } }}
+          cancelButtonProps={{
+            style: { backgroundColor: 'green', color: 'white' },
+          }}
+        >
+          <Button type="primary" danger>
+            حذف
+          </Button>
+        </Popconfirm>
       ),
     },
     {
-      title: 'نام محصول',
-      dataIndex: 'name',
-    },
-    {
-      title: 'قیمت',
-      dataIndex: 'price',
-      render: (price: number) => `${price}  تومان`,
+      title: 'قیمت کل',
+      align: 'center',
+      dataIndex: 'totalPrice',
+      render: (totalPrice: number) => <span dir="rtl">{totalPrice} تومان</span>,
     },
     {
       title: 'تعداد',
+      align: 'center',
       dataIndex: 'count',
       render: (count: number, record: any) => (
-        <div>
+        <div dir="rtl">
           <Button
             onClick={() => increaseItemCount(record.key)}
             disabled={count === record.quantity}
@@ -81,31 +97,30 @@ const Cart = () => {
       ),
     },
     {
-      title: 'قیمت کل',
-      dataIndex: 'totalPrice',
-      render: (totalPrice: number) => `${totalPrice}  تومان`,
+      title: 'قیمت',
+      dataIndex: 'price',
+      align: 'center',
+      render: (price: number) => <span dir="rtl">{price} تومان</span>,
     },
     {
-      title: '',
-      dataIndex: 'key',
-      render: (key: string) => (
-        <Popconfirm
-          title="این محصول از سبد خرید حذف شود؟"
-          onConfirm={() => {
-            removeFromCart(key);
-            message.success('محصول با موفقیت از سبد خرید حذف شد');
-          }}
-          okText="بله"
-          cancelText="خیر"
-          okButtonProps={{ style: { backgroundColor: 'red' } }}
-          cancelButtonProps={{
-            style: { backgroundColor: 'green', color: 'white' },
-          }}
-        >
-          <Button type="primary" danger>
-            حذف
-          </Button>
-        </Popconfirm>
+      title: 'نام محصول',
+      align: 'center',
+      dataIndex: 'name',
+    },
+    {
+      title: 'تصویر',
+      align: 'center',
+      dataIndex: 'images',
+      render: (images: string) => (
+        <div className="flex justify-center items-center">
+          <Image
+            loading="lazy"
+            height={100}
+            width={100}
+            alt="pic"
+            src={`http://localhost:8000/images/products/images/${images}`}
+          />
+        </div>
       ),
     },
   ];
@@ -130,8 +145,9 @@ const Cart = () => {
         سبد خرید شما:
       </h1>
       <Suspense fallback={<Loading />}>
-        <div className="w-full px-5 sm:px-10 md:px-[120px] py-8">
+        <div className="w-full px-5 sm:px-10 md:px-[120px] py-8" dir="ltr">
           <Table
+            pagination={{ position: ['bottomLeft'] }}
             locale={{
               emptyText: 'سبد خرید خالی است',
             }}
@@ -140,11 +156,14 @@ const Cart = () => {
             footer={() => {
               const totalPrice = data.reduce(
                 (accumulator, currentValue) =>
-                  accumulator + currentValue.totalPrice,
+                  accumulator + currentValue?.totalPrice,
                 0
               );
               return (
-                <div className="w-full flex px-5 justify-between items-center">
+                <div
+                  className="w-full flex px-5 justify-between items-center"
+                  dir="rtl"
+                >
                   <div className="flex gap-3 text-center pr-20">
                     <span className="text-lg font-semibold">جمع نهایی:</span>
                     <div className="flex gap-3">

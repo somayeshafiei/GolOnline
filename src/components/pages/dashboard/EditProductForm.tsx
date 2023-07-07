@@ -8,16 +8,51 @@ import { Form } from 'antd';
 import axios from 'axios';
 import { EditProduct } from '@/actions';
 import Cookies from 'universal-cookie';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 interface Props {
   record: Product;
   categories: Category[];
 }
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ size: [] }],
+    [{ font: [] }],
+    [{ align: ['right', 'center', 'justify'] }],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link', 'image'],
+    [{ color: ['red', '#785412'] }],
+    [{ background: ['red', '#785412'] }],
+  ],
+};
+const formats = [
+  'header',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'link',
+  'color',
+  'image',
+  'background',
+  'align',
+  'size',
+  'font',
+];
 export default function EditProductForm({ record, categories }: Props) {
+  const [editor, setEditor] = useState('');
   const [modal1Open, setModal1Open] = useState(false);
   const [initialSubCategories, setInitialSubCategories] = useState([]);
-  const [imagesPreview, setImagesPreview] = useState<string[]>();
-  const [thumbnailPreview, setThumbnailPreview] = useState<string | File>();
-  const [thumbnailNewPreview, setThumbnailNewPreview] = useState<File>();
+  const [imagesPreview, setImagesPreview] = useState('');
+  const [newImagesPreview, setNewImagesPreview] = useState('');
+
+  const [thumbnailPreview, setThumbnailPreview] = useState('');
+  const [thumbnailNewPreview, setThumbnailNewPreview] = useState('');
 
   const thumbNailInputRef = useRef(null);
   const imagesInputRef = useRef(null);
@@ -124,10 +159,10 @@ export default function EditProductForm({ record, categories }: Props) {
       imagesTransfer.items.add(imagesFiles);
       if (thumbNailInput) {
         console.log('test');
-        thumbNailInput.files = thumbNailTransfer.files;
+        // thumbNailInput.files = thumbNailTransfer.files;
       }
       if (imagesInput) {
-        imagesInput.files = imagesTransfer.files;
+        // imagesInput.files = imagesTransfer.files;
       }
     }
   }, [modal1Open, setInitialSubCategories, imagesPreview]);
@@ -225,12 +260,20 @@ export default function EditProductForm({ record, categories }: Props) {
               data.append('subcategory', initialsubcategoryId);
             }
 
-            // if (thumbnailNewPreview) {
-            //   data.append('thumbnail', thumbnailNewPreview);
-            // } else {
+            if (thumbnailNewPreview) {
+              data.append('thumbnail', thumbNail);
+            }
+            // else {
             //   data.append('thumbnail', thumbNail);
             // }
-            // data.append('images', imagesFile);
+
+            // }
+            if (newImagesPreview) {
+              data.append('images', imagesFile);
+            }
+            //  else {
+            //   data.append('images', imagesPreview);
+            // }
             // console.log(`Selected file: ${thumbNail}`);
             console.log(imagesFile);
             const finalData = Object.fromEntries(data);
@@ -369,14 +412,30 @@ export default function EditProductForm({ record, categories }: Props) {
               accept="image/*"
               ref={thumbNailInputRef}
               onChange={(e) => {
-                e?.target?.files
-                  ? (setThumbnailNewPreview(e?.target?.files[0]),
-                    setThumbnailPreview(undefined))
-                  : setThumbnailPreview(record.thumbnail);
+                e?.target?.files &&
+                  (setThumbnailNewPreview(e?.target?.files[0]),
+                  setThumbnailPreview(''));
               }}
             ></input>
             <div className="flex w-full gap-5 pt-5">
-              {thumbnailPreview !== undefined ? (
+              {thumbnailNewPreview ? (
+                <Image
+                  // src={`http://localhost:8000/images/products/thumbnails/${thumbnailPreview}`}
+                  src={URL.createObjectURL(thumbnailNewPreview)}
+                  alt="Thumbnail"
+                  width={60}
+                  height={60}
+                />
+              ) : (
+                <Image
+                  src={`http://localhost:8000/images/products/thumbnails/${thumbnailPreview}`}
+                  // src={URL.createObjectURL(thumbnailPreview)}
+                  alt="Thumbnail"
+                  width={60}
+                  height={60}
+                />
+              )}
+              {/* {thumbnailPreview !== undefined ? (
                 <Image
                   src={`http://localhost:8000/images/products/thumbnails/${thumbnailPreview}`}
                   // src={URL.createObjectURL(thumbnailPreview)}
@@ -394,7 +453,7 @@ export default function EditProductForm({ record, categories }: Props) {
                     height={60}
                   />
                 )
-              )}
+              )} */}
             </div>
           </Form.Item>
           <Form.Item
@@ -409,32 +468,43 @@ export default function EditProductForm({ record, categories }: Props) {
           >
             <input
               type="file"
+              multiple
               name="images"
               accept="image/png, image/jpeg"
               ref={imagesInputRef}
+              onChange={(e) => setNewImagesPreview(Array.from(e.target.files))}
             ></input>
             {
               <div className="flex w-full gap-5 pt-5">
-                {(imagesPreview && (
+                {/* {imagesPreview &&
+                Array.isArray(imagesPreview) &&
+                imagesPreview.map((i, index) => (
                   <Image
-                    src={`http://localhost:8000/images/products/images/${imagesPreview}`}
+                    key={i.index}
+                    src={URL.createObjectURL(imagesPreview[index])}
                     alt="Thumbnail"
                     width={60}
                     height={60}
                   />
-                )) ||
-                  (Array.isArray(imagesPreview) &&
-                    imagesPreview.map((i, index) => {
-                      return (
-                        <Image
-                          key={i[index]}
-                          src={`http://localhost:8000/images/products/images/${imagesPreview[index]}`}
-                          alt="images"
-                          width={60}
-                          height={60}
-                        />
-                      );
-                    }))}
+                ))} */}
+                {newImagesPreview && Array.isArray(newImagesPreview)
+                  ? newImagesPreview.map((i, index) => (
+                      <Image
+                        key={i.index}
+                        src={URL.createObjectURL(newImagesPreview[index])}
+                        alt="Thumbnail"
+                        width={60}
+                        height={60}
+                      />
+                    ))
+                  : imagesPreview && (
+                      <Image
+                        src={`http://localhost:8000/images/products/images/${imagesPreview[0]}`}
+                        alt="Thumbnail"
+                        width={60}
+                        height={60}
+                      />
+                    )}
               </div>
             }
           </Form.Item>
@@ -450,10 +520,17 @@ export default function EditProductForm({ record, categories }: Props) {
             ]}
             hasFeedback
           >
-            <Input
+            <ReactQuill
+              theme="snow"
+              modules={modules}
+              formats={formats}
+              value={editor}
+              onChange={setEditor}
+            />
+            {/* <Input
               placeholder="توضیحات کالا را وارد کنید"
               style={{ width: '100%' }}
-            />
+            /> */}
           </Form.Item>
           <Form.Item wrapperCol={{ span: 24 }}>
             <Button

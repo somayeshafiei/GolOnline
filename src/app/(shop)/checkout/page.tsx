@@ -32,82 +32,108 @@ const Checkout = () => {
   return (
     <Suspense fallback={<Loading />}>
       <div className="w-full px-5 sm:px-10 md:px-[120px] py-8">
-        <h1 className="pb-4">نهایی کردن سبد خرید:</h1>
-        <Form
-          onFinish={(values) => {
-            console.log(values);
+        <h1 className="pb-4 font-bold text-2xl">نهایی کردن سبد خرید:</h1>
+        <div className="w-full flex flex-colgap-5 md:flex-row ">
+          <div className="w-full md:w-1/2 md:h-full"></div>
+          <Form
+            onFinish={(values) => {
+              console.log(values);
 
-            if (values && deliveryDate) {
-              changeRoute('payment');
-            }
-          }}
-          className="p-3 border rounded-md bg-green-50 w-full"
-        >
-          <div className="flex justify-between items-center w-full p-3">
-            <Form.Item name={'name'} initialValue={userFirstName} label="نام:">
-              <Input value={userFirstName} disabled></Input>
+              if (values && deliveryDate) {
+                changeRoute('payment');
+              }
+            }}
+            className="p-3 border rounded-md bg-green-50 w-full md:w-1/2 md:h-full"
+          >
+            <div className="flex justify-between items-center w-full p-3">
+              <Form.Item
+                name={'name'}
+                initialValue={userFirstName}
+                label="نام:"
+              >
+                <Input value={userFirstName} disabled></Input>
+              </Form.Item>
+              <Form.Item
+                name={'lastname'}
+                initialValue={userLastName}
+                label="نام خانوادگی"
+              >
+                <Input value={userLastName} disabled></Input>
+              </Form.Item>
+            </div>
+            <div className="flex justify-between items-center w-full p-3">
+              <Form.Item
+                name={'address'}
+                label="آدرس"
+                rules={[
+                  {
+                    required: true,
+                    message: 'لطفا آدرس خود را وارد کنید',
+                  },
+                  { whitespace: true, message: 'آدرس نمی تواند خالی باشد' },
+                  {
+                    min: 10,
+                    message: 'آدرس نمی تواند کمتر از ۱۰ کاراکتر باشد',
+                  },
+                ]}
+                hasFeedback
+              >
+                <textarea className="border"></textarea>
+              </Form.Item>
+              <Form.Item
+                name={'phone'}
+                label="شماره تلفن"
+                rules={[
+                  {
+                    required: true,
+                    message: 'لطفا شماره تلفن خود را وارد کنید',
+                  },
+                  {
+                    whitespace: true,
+                    message: 'شماره تلفن نمی تواند خالی باشد',
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input></Input>
+              </Form.Item>
+            </div>
+            <div className="w-full flex items-center justify-center">
+              <Form.Item
+                label="تاریخ تحویل"
+                name={'deliveryDate'}
+                rules={[
+                  {
+                    required: true,
+                    message: 'لطفا تاریخ تحویل را وارد کنید',
+                  },
+                  // {
+                  //   whitespace: true,
+                  //   message: ' تاریخ تحویل نمی تواند خالی باشد',
+                  // },
+                ]}
+              >
+                <DatePicker
+                  calendar={persian}
+                  locale={persian_fa}
+                  calendarPosition="bottom-right"
+                  value={deliveryDate}
+                  onChange={(date) => handleDateChange(date)}
+                  minDate={new Date().setDate(7)}
+                />
+              </Form.Item>
+            </div>
+            <Form.Item className="w-full flex justify-center">
+              <Button
+                htmlType="submit"
+                className="bg-green-400 w-44"
+                size="large"
+              >
+                پرداخت
+              </Button>
             </Form.Item>
-            <Form.Item
-              name={'lastname'}
-              initialValue={userLastName}
-              label="نام خانوادگی"
-            >
-              <Input value={userLastName} disabled></Input>
-            </Form.Item>
-          </div>
-          <div className="flex justify-between items-center w-full p-3">
-            <Form.Item
-              name={'address'}
-              label="آدرس"
-              rules={[
-                {
-                  required: true,
-                  message: 'لطفا آدرس خود را وارد کنید',
-                },
-                { whitespace: true, message: 'آدرس نمی تواند خالی باشد' },
-                { min: 10, message: 'آدرس نمی تواند کمتر از ۱۰ کاراکتر باشد' },
-              ]}
-              hasFeedback
-            >
-              <textarea className="border"></textarea>
-            </Form.Item>
-            <Form.Item
-              name={'phone'}
-              label="شماره تلفن"
-              rules={[
-                {
-                  required: true,
-                  message: 'لطفا شماره تلفن خود را وارد کنید',
-                },
-                { whitespace: true, message: 'شماره تلفن نمی تواند خالی باشد' },
-              ]}
-              hasFeedback
-            >
-              <Input></Input>
-            </Form.Item>
-          </div>
-          <div className="p-3">
-            <Form.Item label="تاریخ تحویل" name={'deliveryDate'}>
-              <DatePicker
-                calendar={persian}
-                locale={persian_fa}
-                calendarPosition="bottom-right"
-                value={deliveryDate}
-                onChange={(date) => handleDateChange(date)}
-                minDate={new Date().setDate(31)}
-              />
-            </Form.Item>
-          </div>
-          <Form.Item className="w-full flex justify-center">
-            <Button
-              htmlType="submit"
-              className="bg-green-400 w-44"
-              size="large"
-            >
-              پرداخت
-            </Button>
-          </Form.Item>
-        </Form>
+          </Form>
+        </div>
       </div>
     </Suspense>
   );

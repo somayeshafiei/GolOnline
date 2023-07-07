@@ -6,32 +6,37 @@ import Image from 'next/image';
 import { useState } from 'react';
 import Cookies from 'universal-cookie';
 import EditProductForm from './EditProductForm';
+import 'react-quill/dist/quill.snow.css';
+
 interface Props {
   products: Product[];
-  categories:Category[]
+  categories: Category[];
 }
-export default function ProductsTable({ products,categories }: Props) {
+export default function ProductsTable({ products, categories }: Props) {
   const [columns, setColumns] = useState([
     {
-      title: 'تصویر',
+      title: 'عملیات',
       dataIndex: '',
-      key: 'images',
+      align: 'center',
+      key: '_id',
       render: (record: Product) => (
-        <Image
-          loading="lazy"
-          height={100}
-          width={100}
-          alt="pic"
-          src={`http://localhost:8000/images/products/images/${record.images[0]}`}
-        />
+        <div className="flex items-center justify-center w-full h-full gap-3">
+          <EditProductForm record={record} categories={categories} />
+          <form
+            action={() => {
+              const cookies = new Cookies();
+              const accessToken = cookies.get('accessToken');
+              onDeleteProduct(record._id, accessToken);
+            }}
+          >
+            <Button htmlType="submit">حذف</Button>
+          </form>
+        </div>
       ),
     },
     {
-      title: 'نام محصول',
-      dataIndex: 'name',
-    },
-    {
       title: 'دسته بندی',
+      align: 'center',
       dataIndex: '',
       key: 'category-subcategory',
       render: (record: Product) => (
@@ -44,22 +49,23 @@ export default function ProductsTable({ products,categories }: Props) {
       },
     },
     {
-      title: 'عملیات',
+      title: 'نام محصول',
+      dataIndex: 'name',
+      align: 'center',
+    },
+    {
+      title: 'تصویر',
+      align: 'center',
       dataIndex: '',
-      key: '_id',
+      key: 'images',
       render: (record: Product) => (
-        <div className="flex items-center justify-center w-full h-full gap-3">
-          <EditProductForm record={record} categories={categories}/>
-          <form
-            action={() => {
-              const cookies = new Cookies();
-              const accessToken = cookies.get('accessToken');
-              onDeleteProduct(record._id, accessToken);
-            }}
-          >
-            <Button htmlType="submit">حذف</Button>
-          </form>
-        </div>
+        <Image
+          loading="lazy"
+          height={100}
+          width={100}
+          alt="pic"
+          src={`http://localhost:8000/images/products/images/${record?.images[0]}`}
+        />
       ),
     },
   ]);
@@ -75,18 +81,17 @@ export default function ProductsTable({ products,categories }: Props) {
   }
 
   return (
-    <>
+    <div dir="ltr">
       <Table
         columns={columns}
         dataSource={products}
         pagination={{
           pageSize: 3,
           total: products.length,
-          showSizeChanger: true,
           showTotal: (total, range) =>
             `${range[0]}-${range[1]} of ${total} items`,
         }}
       />
-    </>
+    </div>
   );
 }

@@ -35,7 +35,7 @@ export default async function Home() {
   // console.log(result);
   return (
     <div className="w-full px-5 sm:px-10 md:px-[120px] py-8">
-      <div className="w-full h-[300px]">
+      <div className="w-full h-[300px]" dir="ltr">
         <HomePageSlider />
       </div>
       <CategoriesBoxWrapper />

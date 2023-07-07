@@ -9,7 +9,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import Image from 'next/image';
-import logo from '../../images/LOGO2.png';
+import logo from '../../images/test.png';
 import Link from 'next/link';
 import Cookies from 'universal-cookie';
 import useCartStore from '@/store/store';
@@ -24,14 +24,14 @@ const Header = () => {
   const userFirstname = cookies.get('userFirstName');
   const [cartItems] = useCartStore((state) => [state.products.length]);
   const handleLogOut = () => {
+    instance.get(`http://localhost:8000/api/auth/logout`);
     const cookies = new Cookies();
-    cookies.remove('userFirstName');
+    cookies.remove('userFirstName', {path: "/", domain: "localhost"});
     cookies.remove('userLastName');
     cookies.remove('userId');
     if (accessToken) {
       cookies.remove('accessToken');
       cookies.remove('refreshToken');
-      instance.get(`http://localhost:8000/api/auth/logout`);
     }
   };
   // useEffect(()=>{
@@ -62,7 +62,7 @@ const Header = () => {
           setOpenMenu(false);
         }}
         closable={false}
-        bodyStyle={{ backgroundColor: 'blue', width: '150px' }}
+        bodyStyle={{ backgroundColor: '#AF6EA0', width: '150px' }}
         contentWrapperStyle={{ width: '150px' }}
       >
         <AppMenue isInLine />
@@ -78,7 +78,7 @@ const Header = () => {
             count={cartItems}
             size="default"
             status="processing"
-            color="#AF6EA0"
+            color="red"
           >
             {/* <Avatar shape="square" size="large" /> */}
             <ShoppingCartOutlined style={{ fontSize: 24 }} />
@@ -93,7 +93,7 @@ const Header = () => {
           </Button>
         ) : (
           <Link href={'/login'}>
-            <Button className="text-white bg-[#46A358] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358] ">
+            <Button className="text-white bg-[#AF6EA0] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358] ">
               ورود <LoginOutlined />
             </Button>
           </Link>

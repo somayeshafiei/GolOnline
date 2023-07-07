@@ -3,7 +3,7 @@ import AddProductForm from '@/components/pages/dashboard/AddProductForm';
 import ProductsTable from '@/components/pages/dashboard/ProductsTable';
 
 export async function getData() {
-  const res = await fetch('http://localhost:8000/api/products', {
+  const res = await fetch('http://localhost:8000/api/products?limit=all', {
     next: { tags: ['products'] },
   });
   // ?page=1&limit=4&fields=-rating,-createdAt,-updatedAt,-__v&sort=price&quantity[gte]=8
@@ -33,7 +33,7 @@ const dashboardProductsPage = async () => {
 
   return (
     <>
-      <div className="flex flex-col gap-5 px-4 md:px-10 pt-24">
+      <div className="flex flex-col gap-5 w-full h-full px-4 md:px-10 pt-24">
         <div className="flex w-full justify-between">
           <h2 className="font-bold text-lg">مدیریت کالاها</h2>
           <AddProductForm categories={categoriesResult} />
@@ -46,7 +46,7 @@ const dashboardProductsPage = async () => {
             </button>
           </form> */}
         </div>
-        <ProductsTable products={result} categories={categoriesResult}/>
+        <ProductsTable products={result} categories={categoriesResult} />
       </div>
     </>
   );
