@@ -1,4 +1,6 @@
-import { CategoryGroup } from '@/components/pages/main/CategoryGroup';
+import CategoriesBoxWrapper from '@/components/pages/main/CategoriesBoxWrapper';
+import OnlineBuying from '@/components/pages/main/OnlineBuying';
+import HomePageSlider from '@/components/pages/main/Slider';
 import { Category } from '@/interfaces';
 
 export async function getData() {
@@ -33,7 +35,11 @@ export default async function Home() {
   // console.log(result);
   return (
     <div className="w-full px-5 sm:px-10 md:px-[120px] py-8">
-      <CategoryGroup categoriesResult={categoriesResult} allProducts={result} />
+      <div className="w-full h-[300px]" dir="ltr">
+        <HomePageSlider />
+      </div>
+      <CategoriesBoxWrapper />
+      <OnlineBuying categoriesResult={categoriesResult} allProducts={result} />
     </div>
   );
 }

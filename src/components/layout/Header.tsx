@@ -9,7 +9,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import Image from 'next/image';
-import logo from '../../images/Logo.png';
+import logo from '../../images/test.png';
 import Link from 'next/link';
 import Cookies from 'universal-cookie';
 import useCartStore from '@/store/store';
@@ -24,14 +24,14 @@ const Header = () => {
   const userFirstname = cookies.get('userFirstName');
   const [cartItems] = useCartStore((state) => [state.products.length]);
   const handleLogOut = () => {
+    instance.get(`http://localhost:8000/api/auth/logout`);
     const cookies = new Cookies();
-    cookies.remove('userFirstName');
+    cookies.remove('userFirstName', {path: "/", domain: "localhost"});
     cookies.remove('userLastName');
     cookies.remove('userId');
     if (accessToken) {
       cookies.remove('accessToken');
       cookies.remove('refreshToken');
-      instance.get(`http://localhost:8000/api/auth/logout`);
     }
   };
   // useEffect(()=>{
@@ -41,7 +41,7 @@ const Header = () => {
     <header className="py-2 flex w-full border-b justify-between px-5 sm:px-10 md:px-[120px]">
       <span className="hidden sm:flex sm:flex-col sm:justify-center sm:items-center sm:justify-items-end">
         <Link href={'/'}>
-          <Image src={logo} alt="logo" height={60} width={120} />
+          <Image src={logo} alt="logo" height={20} width={120} />
         </Link>
       </span>
       <div className="order-first flex flex-col justify-center text-[#46A358] h-full sm:hidden">
@@ -62,8 +62,8 @@ const Header = () => {
           setOpenMenu(false);
         }}
         closable={false}
-        bodyStyle={{ backgroundColor: 'blue', width: '190px' }}
-        contentWrapperStyle={{ width: '190px' }}
+        bodyStyle={{ backgroundColor: '#AF6EA0', width: '150px' }}
+        contentWrapperStyle={{ width: '150px' }}
       >
         <AppMenue isInLine />
       </Drawer>
@@ -74,7 +74,12 @@ const Header = () => {
           </Link>
         )}
         <Link href={'/cart'}>
-          <Badge count={cartItems} size="default" status="processing">
+          <Badge
+            count={cartItems}
+            size="default"
+            status="processing"
+            color="red"
+          >
             {/* <Avatar shape="square" size="large" /> */}
             <ShoppingCartOutlined style={{ fontSize: 24 }} />
           </Badge>
@@ -88,7 +93,7 @@ const Header = () => {
           </Button>
         ) : (
           <Link href={'/login'}>
-            <Button className="text-white bg-[#46A358] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358] ">
+            <Button className="text-white bg-[#AF6EA0] hover:bg-white hover:text-[#46A358] hover:border hover:border-[#46A358] ">
               ورود <LoginOutlined />
             </Button>
           </Link>

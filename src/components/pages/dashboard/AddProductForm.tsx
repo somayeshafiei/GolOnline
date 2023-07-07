@@ -1,6 +1,8 @@
 // import { AddProduct } from "@/actions";
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 // import AddProductModal from './AddProductModal';
 import {
   Button,
@@ -22,6 +24,37 @@ import Image from 'next/image';
 interface Props {
   categories: Category[];
 }
+// const ReactQuill = dynamic(import('react-quill'));
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ size: [] }],
+    [{ font: [] }],
+    [{ align: ['right', 'center', 'justify'] }],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['link', 'image'],
+    [{ color: ['red', '#785412'] }],
+    [{ background: ['red', '#785412'] }],
+  ],
+};
+const formats = [
+  'header',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'link',
+  'color',
+  'image',
+  'background',
+  'align',
+  'size',
+  'font',
+];
 export default function AddProductForm({ categories }: Props) {
   const [category, setCategory] = useState('');
   const [categoryId, setCategoryId] = useState('');
@@ -30,6 +63,7 @@ export default function AddProductForm({ categories }: Props) {
   const [modal1Open, setModal1Open] = useState(false);
   const [thumbnailPreview, setThumbnailPreview] = useState('');
   const [imagesPreview, setImagesPreview] = useState('');
+  const [editor, setEditor] = useState('');
   const [form] = Form.useForm();
   const thumbNailInputRef = useRef(null);
   const imagesInputRef = useRef(null);
@@ -74,7 +108,8 @@ export default function AddProductForm({ categories }: Props) {
   // const thumbnailPrev = thumbNailInputRef.current?.files[0];
   useEffect(() => {
     console.log(thumbnailPreview);
-  }, [thumbnailPreview, thumbNailInputRef.current]);
+  }, [thumbnailPreview]);
+
   return (
     <>
       <form action={() => setModal1Open(true)}>
@@ -102,6 +137,7 @@ export default function AddProductForm({ categories }: Props) {
           form={form}
           labelCol={{ span: 6 }}
           style={{ paddingTop: '30px' }}
+          className="w-full flex flex-col"
           // wrapperCol={{ span: 14 }}
           autoComplete="off"
           // onFinish={(values) => console.log(values)}
@@ -118,7 +154,8 @@ export default function AddProductForm({ categories }: Props) {
             data.append('name', values.name);
             data.append('brand', values.brand);
             data.append('price', values.price);
-            data.append('description', values.description);
+            data.append('description', editor);
+            // data.append('description', values.description);
             data.append('category', categoryId);
             data.append('subcategory', subcategoryId);
             data.append('thumbnail', thumbNail);
@@ -130,6 +167,7 @@ export default function AddProductForm({ categories }: Props) {
             const finalData = Object.fromEntries(data);
             console.log(values);
             console.log(finalData);
+            console.log(editor);
             const cookies = new Cookies();
             const accessToken = cookies.get('accessToken');
             AddProduct(data, accessToken);
@@ -399,23 +437,26 @@ export default function AddProductForm({ categories }: Props) {
           <Form.Item
             name="description"
             label="توضیحات کالا"
-            rules={[
-              {
-                required: true,
-                message: 'لطفا توضیحات کالا را وارد نمایید',
-              },
-              { whitespace: true, message: 'توضیحات کالا نمی تواند خالی باشد' },
-              // ({getFieldValue})=>({
-              //   validator(_,value){
-              //     if(!value)
-              //   }
-              // })
-            ]}
-            hasFeedback
+            // rules={[
+            //   {
+            //     required: true,
+            //     message: 'لطفا توضیحات کالا را وارد نمایید',
+            //   },
+            //   { whitespace: true, message: 'توضیحات کالا نمی تواند خالی باشد' },
+            //   // ({getFieldValue})=>({
+            //   //   validator(_,value){
+            //   //     if(!value)
+            //   //   }
+            //   // })
+            // ]}
+            // hasFeedback
           >
-            <Input
-              placeholder="توضیحات کالا را وارد کنید"
-              style={{ width: '100%' }}
+            <ReactQuill
+              theme="snow"
+              modules={modules}
+              formats={formats}
+              value={editor}
+              onChange={setEditor}
             />
           </Form.Item>
           <Form.Item wrapperCol={{ span: 24 }}>

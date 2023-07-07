@@ -1,4 +1,5 @@
 'use client';
+import instance from '@/api/constants';
 import {
   DatabaseOutlined,
   HomeOutlined,
@@ -9,8 +10,20 @@ import {
 import { Menu } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import Cookies from 'universal-cookie';
 
 const SideBar = () => {
+  const handleLogOut = () => {
+    const cookies = new Cookies();
+    const accessToken = cookies.get('accessToken');
+    cookies.remove('userFirstName');
+    cookies.remove('userLastName');
+    cookies.remove('userId');
+    if (accessToken) {
+      cookies.remove('accessToken');
+      cookies.remove('refreshToken');
+    }
+  };
   const router = useRouter();
   return (
     <div className="flex flex-col h-full">
@@ -21,6 +34,8 @@ const SideBar = () => {
         className="flex-1"
         onClick={({ key }) => {
           if (key === '/Logout') {
+    instance.get(`http://localhost:8000/api/auth/logout`);
+            handleLogOut();
             router.push('/');
           } else {
             router.push(key);

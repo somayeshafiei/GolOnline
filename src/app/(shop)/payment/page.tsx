@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { Suspense } from 'react';
 import Cookies from 'universal-cookie';
-
+import Link from 'next/link';
 const Payment = () => {
   const cookies = new Cookies();
   const user = cookies.get('userId');
@@ -54,7 +54,9 @@ const Payment = () => {
           {/* <form action={}> */}
           <Button onClick={handlePay}>پرداخت</Button>
           {/* </form> */}
-          <Button danger>انصراف</Button>
+          <Link href={'/cart'}>
+            <Button danger>انصراف</Button>
+          </Link>
         </div>
       </div>
     </Suspense>

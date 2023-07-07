@@ -5,7 +5,7 @@ import React from 'react';
 
 async function getSingleCategory(id: string) {
   const res = await fetch(
-    `http://localhost:8000/api/products?category[_id]=${id}`
+    `http://localhost:8000/api/products?limit=all&category[_id]=${id}`
   );
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
